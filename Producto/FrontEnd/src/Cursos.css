@@ -1,0 +1,157 @@
+.curso-card {
+    border-radius: 0 !important; /* Mantenemos bordes rectos */
+    transition: transform 0.3s ease, shadow 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.curso-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+}
+
+.curso-image-container {
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+}
+
+.curso-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.curso-card:hover .curso-img {
+    transform: scale(1.05);
+}
+
+.curso-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: var(--brand-color);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    letter-spacing: 1px;
+}
+
+/* Reutilizamos el estilo de botones con bordes rectos para Cursos */
+.btn-brand-outline {
+    border-radius: 0 !important;
+}
+
+.style-horario {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+}
+
+/* Opcional: Si quieres un icono de reloj sin instalar librerías extras, 
+   podemos usar un pseudo-elemento */
+.style-horario::before {
+    content: "🕒"; 
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+.curso-card {
+    /* Aseguramos que todas las cards tengan la misma altura */
+    display: flex;
+    flex-direction: column;
+}
+
+.style-horario {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el contenido interno */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible para centrar */
+}
+
+/* Si estás usando el emoji en el CSS, asegúrate de que no empuje el texto hacia un lado */
+.style-horario::before {
+    content: "🕒"; 
+    margin-right: 8px;
+    font-size: 0.9rem;
+}
+
+
+header {
+
+    background-color: #6c757d;
+}
+
+/* Contenedor de la imagen */
+.curso-image-container {
+  height: 220px;
+}
+
+.curso-img {
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.curso-card:hover .curso-img {
+  transform: scale(1.05);
+}
+
+/* LA VIÑETA (BADGE) SOBRE LA IMAGEN */
+.category-badge-overlay {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: var(--brand-color, #8b5e3c); /* Color de Muso */
+  color: white;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 2;
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Estilos de Cupos */
+.cupos-disponibles {
+  font-size: 0.8rem;
+  color: #4a4a4a;
+  background-color: #f0f0f0;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.cupos-agotados {
+  font-size: 0.8rem;
+  color: #d93025;
+  background-color: #fce8e6;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 1px solid #f5c2c7;
+}
+
+/* Estilo Horario */
+.style-horario {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #6c757d;
+}
+
+.category-badge-overlay {
+  /* ... tus otros estilos ... */
+  min-width: 80px;
+  text-align: center;
+  text-transform: uppercase; /* Por si en la DB están en minúsculas */
+}
