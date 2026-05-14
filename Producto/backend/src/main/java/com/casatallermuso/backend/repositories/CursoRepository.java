@@ -1,5 +1,9 @@
 package com.casatallermuso.backend.repositories;
 
-public class CursoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.casatallermuso.backend.entities.Curso;
+
+public interface CursoRepository extends JpaRepository <Curso, Long>{
 
 }
