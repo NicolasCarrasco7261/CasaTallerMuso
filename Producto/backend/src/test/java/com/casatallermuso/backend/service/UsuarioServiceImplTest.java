@@ -17,16 +17,16 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.casatallermuso.backend.entities.Usuario;
-import com.casatallermuso.backend.repositories.UsuarioRepositories;
-import com.casatallermuso.backend.services.UsuarioServicesImpl;
+import com.casatallermuso.backend.repositories.UsuarioRepository;
+import com.casatallermuso.backend.services.UsuarioServiceImpl;
 
 public class UsuarioServiceImplTest {
 
     @Mock
-    private UsuarioRepositories usuarioRepositories;
+    private UsuarioRepository usuarioRepository;
 
     @InjectMocks
-    private UsuarioServicesImpl usuarioService;
+    private UsuarioServiceImpl usuarioService;
 
     @BeforeEach
     void init() {
@@ -38,25 +38,25 @@ public class UsuarioServiceImplTest {
     void listarTodos_ok() {
         var u1 = new Usuario(); u1.setId(1L); u1.setNombre("Ana");
         var u2 = new Usuario(); u2.setId(2L); u2.setNombre("Benja");
-        when(usuarioRepositories.findAll()).thenReturn(List.of(u1, u2));
+        when(usuarioRepository.findAll()).thenReturn(List.of(u1, u2));
 
         var result = usuarioService.listarTodos();
 
         assertThat(result).hasSize(2);
-        verify(usuarioRepositories, times(1)).findAll();
+        verify(usuarioRepository, times(1)).findAll();
     }
 
     @Test
     @DisplayName("obtenerPorId: debe retornar el usuario cuando existe")
     void obtenerPorId_ok() {
         var u = new Usuario(); u.setId(10L); u.setNombre("Admin");
-        when(usuarioRepositories.findById(10L)).thenReturn(Optional.of(u));
+        when(usuarioRepository.findById(10L)).thenReturn(Optional.of(u));
 
         var result = usuarioService.obtenerPorId(10L);
 
         assertEquals(10L, result.getId());
         assertEquals("Admin", result.getNombre());
-        verify(usuarioRepositories).findById(10L);
+        verify(usuarioRepository).findById(10L);
     }
 
     @Test
@@ -66,12 +66,12 @@ public class UsuarioServiceImplTest {
         u.setId(7L);
         u.setEstado(true);
 
-        when(usuarioRepositories.findById(7L)).thenReturn(Optional.of(u));
-        when(usuarioRepositories.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(usuarioRepository.findById(7L)).thenReturn(Optional.of(u));
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
 
         var result = usuarioService.cambiarEstado(7L, false);
 
         assertEquals(false, result.getEstado());
-        verify(usuarioRepositories).save(u);
+        verify(usuarioRepository).save(u);
     }
 }

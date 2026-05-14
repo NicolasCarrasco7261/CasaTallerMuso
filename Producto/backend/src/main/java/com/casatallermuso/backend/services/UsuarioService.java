@@ -3,7 +3,7 @@ package com.casatallermuso.backend.services;
 import java.util.List;
 
 import com.casatallermuso.backend.entities.Usuario;
-public interface UsuarioServices {
+public interface UsuarioService {
     // Crear un nuevo usuarios
     Usuario crear(Usuario usuario);
 

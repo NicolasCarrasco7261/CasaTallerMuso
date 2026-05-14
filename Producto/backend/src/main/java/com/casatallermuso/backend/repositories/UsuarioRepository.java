@@ -8,12 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.casatallermuso.backend.entities.Usuario;
 
 @Repository
-public interface UsuarioRepositories extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByEmail(String email);
-
-    Optional<Usuario> findByNombre(String nombre);
-
     boolean existsByEmail(String email);
-    boolean existsByNombre(String nombre);
+
 }

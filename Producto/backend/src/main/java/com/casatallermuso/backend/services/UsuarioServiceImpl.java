@@ -6,17 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.casatallermuso.backend.entities.Usuario;
-import com.casatallermuso.backend.repositories.UsuarioRepositories;
+import com.casatallermuso.backend.repositories.UsuarioRepository;
 
 @Service
 @Transactional
-public class UsuarioServicesImpl implements UsuarioServices {
+public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepositories usuarioRepositories; 
+    private final UsuarioRepository usuarioRepository; 
 
     // Inyección por constructor del repositorio y del bean global del encoder
-    public UsuarioServicesImpl(UsuarioRepositories usuarioRepositories) {
-        this.usuarioRepositories = usuarioRepositories;
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
     // ===== CRUD =====
@@ -34,19 +34,19 @@ public class UsuarioServicesImpl implements UsuarioServices {
         if (usuario.getEstado() == null) usuario.setEstado(true);
         if (usuario.getRol() == null) usuario.setRol(Usuario.Rol.USUARIO);
 
-        return usuarioRepositories.save(usuario);
+        return usuarioRepository.save(usuario);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
-        return usuarioRepositories.findAll();
+        return usuarioRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Usuario obtenerPorId(Long id) {
-        return usuarioRepositories.findById(id)
+        return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
@@ -66,28 +66,28 @@ public class UsuarioServicesImpl implements UsuarioServices {
         }
 
         // Estado se maneja en cambiarEstado(...)
-        return usuarioRepositories.save(existente);
+        return usuarioRepository.save(existente);
     }
 
     @Override
     public void eliminar(Long id) {
-        if (!usuarioRepositories.existsById(id)) {
+        if (!usuarioRepository.existsById(id)) {
             throw new RuntimeException("Usuario no encontrado: " + id);
         }
-        usuarioRepositories.deleteById(id);
+        usuarioRepository.deleteById(id);
     }
 
     @Override
     public Usuario cambiarEstado(Long id, Boolean nuevoEstado) {
         Usuario existente = obtenerPorId(id);
         existente.setEstado(nuevoEstado = false);
-        return usuarioRepositories.save(existente);
+        return usuarioRepository.save(existente);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Usuario obtenerPorEmail(String email) {
-        return usuarioRepositories.findByEmail(email)
+        return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + email));
     }
 }

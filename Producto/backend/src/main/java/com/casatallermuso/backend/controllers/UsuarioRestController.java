@@ -17,44 +17,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.casatallermuso.backend.entities.Usuario;
-import com.casatallermuso.backend.services.UsuarioServices;
+import com.casatallermuso.backend.services.UsuarioService;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/usuarios")
-public class UsuarioRestControllers {
+public class UsuarioRestController {
 
     @Autowired
-    private UsuarioServices usuarioServices;
+    private UsuarioService usuarioService;
 
     @PostMapping
     public ResponseEntity<Usuario> crear(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioServices.crear(usuario));
+        return ResponseEntity.ok(usuarioService.crear(usuario));
     }
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarTodos() {
-        return ResponseEntity.ok(usuarioServices.listarTodos());
+        return ResponseEntity.ok(usuarioService.listarTodos());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obtenerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioServices.obtenerPorId(id));
+        return ResponseEntity.ok(usuarioService.obtenerPorId(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario usuarioActualizado) {
-        return ResponseEntity.ok(usuarioServices.actualizar(id, usuarioActualizado));
+        return ResponseEntity.ok(usuarioService.actualizar(id, usuarioActualizado));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        usuarioServices.eliminar(id);
+        usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/estado")
     public ResponseEntity<Usuario> cambiarEstado(@PathVariable Long id, @RequestParam Boolean estado) {
-        return ResponseEntity.ok(usuarioServices.cambiarEstado(id, estado));
+        return ResponseEntity.ok(usuarioService.cambiarEstado(id, estado));
     }
 }
