@@ -3,7 +3,7 @@ package com.casatallermuso.backend.services;
 import java.util.List;
 
 import com.casatallermuso.backend.entities.Usuario;
-public interface UsuarioServices {
+public interface UsuarioService {
     // Crear un nuevo usuarios
     Usuario crear(Usuario usuario);
 
@@ -19,11 +19,9 @@ public interface UsuarioServices {
     // Eliminar un usuario por su ID
     void eliminar(Long id);
 
-    // Métodos según la rúbrica para usuarios
-
     // Cambiar estado (ACTIVO / INACTIVO)
     Usuario cambiarEstado(Long id, Boolean nuevoEstado);
 
-    // Soporte para login (AuthController usará esto)
-    Usuario obtenerPorEmail(String email);
+    // Obtener un usuario por su correo
+    Usuario obtenerPorEmail(String correo);
 }

@@ -17,16 +17,16 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.casatallermuso.backend.entities.Usuario;
-import com.casatallermuso.backend.repositories.UsuarioRepositories;
-import com.casatallermuso.backend.services.UsuarioServicesImpl;
+import com.casatallermuso.backend.repositories.UsuarioRepository;
+import com.casatallermuso.backend.services.UsuarioServiceImpl;
 
 public class UsuarioServiceImplTest {
 
     @Mock
-    private UsuarioRepositories usuarioRepositories;
+    private UsuarioRepository usuarioRepositories;
 
     @InjectMocks
-    private UsuarioServicesImpl usuarioService;
+    private UsuarioServiceImpl usuarioService;
 
     @BeforeEach
     void init() {
@@ -64,14 +64,14 @@ public class UsuarioServiceImplTest {
     void cambiarEstado_ok() {
         var u = new Usuario();
         u.setId(7L);
-        u.setEstado(true);
+        u.setActivo(true);
 
         when(usuarioRepositories.findById(7L)).thenReturn(Optional.of(u));
         when(usuarioRepositories.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
 
         var result = usuarioService.cambiarEstado(7L, false);
 
-        assertEquals(false, result.getEstado());
+        assertEquals(false, result.getActivo());
         verify(usuarioRepositories).save(u);
     }
 }

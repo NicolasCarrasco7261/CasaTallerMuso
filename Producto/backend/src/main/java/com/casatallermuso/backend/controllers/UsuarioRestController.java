@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.casatallermuso.backend.entities.Usuario;
-import com.casatallermuso.backend.services.UsuarioServices;
+import com.casatallermuso.backend.services.UsuarioService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/usuarios")
-public class UsuarioRestControllers {
+@RequestMapping("/api/usuario")
+public class UsuarioRestController {
 
     @Autowired
-    private UsuarioServices usuarioServices;
+    private UsuarioService usuarioServices;
 
     @PostMapping
     public ResponseEntity<Usuario> crear(@RequestBody Usuario usuario) {
@@ -53,8 +53,8 @@ public class UsuarioRestControllers {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<Usuario> cambiarEstado(@PathVariable Long id, @RequestParam Boolean estado) {
-        return ResponseEntity.ok(usuarioServices.cambiarEstado(id, estado));
+    @PatchMapping("/{id}/activo")
+    public ResponseEntity<Usuario> cambiarEstado(@PathVariable Long id, @RequestParam Boolean activo) {
+        return ResponseEntity.ok(usuarioServices.cambiarEstado(id, activo));
     }
 }
