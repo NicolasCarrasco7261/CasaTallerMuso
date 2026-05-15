@@ -1,31 +1,34 @@
 package com.casatallermuso.backend.controllers;
 
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.casatallermuso.backend.annotations.RequiereAuth;
 import com.casatallermuso.backend.dto.UsuarioDTO;
 import com.casatallermuso.backend.dto.UsuarioMapper;
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.services.UsuarioService;
 
-import jakarta.validation.Valid;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/clientes")
+@RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
-public class ClienteRestController {
+public class UsuarioRestController {
 
     private final UsuarioService usuarioService;
     private final UsuarioMapper usuarioMapper;
 
-    @PostMapping("/registrar")
-    public ResponseEntity<UsuarioDTO.ObtenerCliente> nuevoCliente(@RequestBody @Valid UsuarioDTO.CrearCliente usuarioDTO) {
-        Usuario nuevoUsuario = usuarioService.crearUsuario(usuarioMapper.toEntity(usuarioDTO), usuarioDTO.getClaveSinCifrar());
-        return ResponseEntity.ok(usuarioMapper.toObtenerClienteDTO(nuevoUsuario));
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioDTO.Vista> obtenerMiUsuario(@RequiereAuth Claims claims) {
+        UUID usuarioId = UUID.fromString(claims.getSubject());
+        Usuario usuario = usuarioService.obtenerPorId(usuarioId);
+        return ResponseEntity.ok(usuarioMapper.toVistaDTO(usuario));
     }
 
 }

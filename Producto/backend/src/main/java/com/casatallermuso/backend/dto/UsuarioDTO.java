@@ -49,14 +49,14 @@ public class UsuarioDTO {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class ObtenerCliente extends BaseDTO {
+    public static class Vista extends BaseDTO {
         @NotNull
         private DetalleUsuarioDTO detalleUsuario;
     }
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class ObtenerAdmin extends BaseDTO {
+    public static class VistaAdmin extends BaseDTO {
         @NotBlank
         private String tipoUsuarioNombre;
 
@@ -71,9 +71,9 @@ public class UsuarioDTO {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class CrearCliente extends BaseDTO {
+    public static class Registro extends BaseDTO {
         @NotBlank
-        private String claveSinCifrar;
+        private String clave;
 
         @NotNull
         private DetalleUsuarioDTO detalleUsuario;
@@ -81,7 +81,7 @@ public class UsuarioDTO {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class CrearAdmin extends BaseDTO {
+    public static class Creacion extends BaseDTO {
         @NotNull
         private RolDTO rolUsuario;
     }

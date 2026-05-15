@@ -13,14 +13,14 @@ public interface UsuarioMapper {
     UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
 
     @InheritConfiguration(name = "ignorarCamposClienteTemplate")
-    Usuario toEntity(UsuarioDTO.ObtenerCliente dto);
+    Usuario toEntity(UsuarioDTO.Vista dto);
 
     @InheritConfiguration(name = "ignorarCamposClienteTemplate")
-    Usuario toEntity(UsuarioDTO.CrearCliente dto);
+    Usuario toEntity(UsuarioDTO.Registro dto);
 
-    UsuarioDTO.ObtenerCliente toObtenerClienteDTO(Usuario usuario);
+    UsuarioDTO.Vista toVistaDTO(Usuario usuario);
 
-    @Mapping(target = "claveSinCifrar", ignore = true)
-    UsuarioDTO.CrearCliente toCrearClienteDTO(Usuario usuario);
+    @Mapping(target = "clave", ignore = true)
+    UsuarioDTO.Registro toRegistroDTO(Usuario usuario);
 
 }
