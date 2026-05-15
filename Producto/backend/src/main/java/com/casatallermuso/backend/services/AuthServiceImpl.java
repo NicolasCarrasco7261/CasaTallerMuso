@@ -1,5 +1,6 @@
 package com.casatallermuso.backend.services;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.casatallermuso.backend.entities.Usuario;
@@ -16,6 +17,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -23,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
             .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
         
-        if (!usuario.getClaveHash().equals(clave)) {
+        if (!passwordEncoder.matches(clave, usuario.getClaveHash())) {
             throw new RuntimeException("Credenciales inválidas");
         }
 
@@ -32,8 +34,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String signupOrThrow(Usuario newUsuario, String clave) {
-        // TODO: Implementar cifrado de contraseñas
-        newUsuario.setClaveHash(clave);
+        newUsuario.setClaveHash(
+            passwordEncoder.encode(clave)
+        );
 
         rolRepository.findByTipoRol(TipoRolUsuario.CLIENTE).ifPresent((tipoUsuario) -> {
             newUsuario.setRol(tipoUsuario);
