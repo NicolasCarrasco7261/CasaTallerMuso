@@ -2,13 +2,13 @@ package com.casatallermuso.backend.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.times;
@@ -34,13 +34,15 @@ public class UsuarioServiceImplTest {
     }
 
     @Test
-    @DisplayName("listarTodos: debe retornar los usuarios del repositorio")
-    void listarTodos_ok() {
-        var u1 = new Usuario(); u1.setId(1L); u1.setNombre("Ana");
-        var u2 = new Usuario(); u2.setId(2L); u2.setNombre("Benja");
+    @DisplayName("listarUsuarios: debe retornar los usuarios del repositorio")
+    void listarUsuarios_ok() {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        var u1 = new Usuario(); u1.setId(id1); u1.setNombre("Ana");
+        var u2 = new Usuario(); u2.setId(id2); u2.setNombre("Benja");
         when(usuarioRepository.findAll()).thenReturn(List.of(u1, u2));
 
-        var result = usuarioService.listarTodos();
+        var result = usuarioService.listarUsuarios();
 
         assertThat(result).hasSize(2);
         verify(usuarioRepository, times(1)).findAll();
@@ -49,29 +51,15 @@ public class UsuarioServiceImplTest {
     @Test
     @DisplayName("obtenerPorId: debe retornar el usuario cuando existe")
     void obtenerPorId_ok() {
-        var u = new Usuario(); u.setId(10L); u.setNombre("Admin");
-        when(usuarioRepository.findById(10L)).thenReturn(Optional.of(u));
+        UUID id = UUID.randomUUID();
+        var u = new Usuario(); u.setId(id); u.setNombre("Admin");
+        when(usuarioRepository.findById(id)).thenReturn(Optional.of(u));
 
-        var result = usuarioService.obtenerPorId(10L);
+        var result = usuarioService.obtenerPorId(id);
 
-        assertEquals(10L, result.getId());
+        assertEquals(id, result.getId());
         assertEquals("Admin", result.getNombre());
-        verify(usuarioRepository).findById(10L);
+        verify(usuarioRepository).findById(id);
     }
 
-    @Test
-    @DisplayName("cambiarEstado: pasa de ACTIVO a INACTIVO")
-    void cambiarEstado_ok() {
-        var u = new Usuario();
-        u.setId(7L);
-        u.setEstado(true);
-
-        when(usuarioRepository.findById(7L)).thenReturn(Optional.of(u));
-        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
-
-        var result = usuarioService.cambiarEstado(7L, false);
-
-        assertEquals(false, result.getEstado());
-        verify(usuarioRepository).save(u);
-    }
 }

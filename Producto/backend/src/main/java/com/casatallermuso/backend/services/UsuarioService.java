@@ -1,29 +1,18 @@
 package com.casatallermuso.backend.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.casatallermuso.backend.entities.Usuario;
 public interface UsuarioService {
-    // Crear un nuevo usuarios
-    Usuario crear(Usuario usuario);
 
-    // Listar todos los usuarios
-    List<Usuario> listarTodos();
+    Usuario crearUsuario(Usuario usuario, String claveSinCifrar);
+    List<Usuario> listarUsuarios();
 
-    // Obtener un usuario por su ID
-    Usuario obtenerPorId(Long id);
+    Usuario obtenerPorId(UUID id);
+    Usuario obtenerPorCorreo(String correo);
 
-    // Actualizar un usuario existente
-    Usuario actualizar(Long id, Usuario usuarioActualizado);
+    void eliminarUsuario(UUID id);
+    // TODO: Implementar actualizaciones parciales
 
-    // Eliminar un usuario por su ID
-    void eliminar(Long id);
-
-    // Métodos según la rúbrica para usuarios
-
-    // Cambiar estado (ACTIVO / INACTIVO)
-    Usuario cambiarEstado(Long id, Boolean nuevoEstado);
-
-    // Soporte para login (AuthController usará esto)
-    Usuario obtenerPorEmail(String email);
 }
