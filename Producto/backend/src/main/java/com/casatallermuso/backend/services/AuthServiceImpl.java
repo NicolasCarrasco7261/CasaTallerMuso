@@ -1,5 +1,7 @@
 package com.casatallermuso.backend.services;
 
+import org.springframework.stereotype.Service;
+
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
 import com.casatallermuso.backend.repositories.RolRepository;
@@ -8,6 +10,7 @@ import com.casatallermuso.backend.security.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 
+@Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
