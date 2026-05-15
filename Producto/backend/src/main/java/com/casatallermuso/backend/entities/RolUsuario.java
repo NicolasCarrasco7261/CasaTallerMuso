@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,7 +35,7 @@ public class RolUsuario {
     @Enumerated(EnumType.STRING)
     private TipoRolUsuario tipoRol;
 
-    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "rol")
     @JsonIgnore
     private List<Usuario> usuarios;
 

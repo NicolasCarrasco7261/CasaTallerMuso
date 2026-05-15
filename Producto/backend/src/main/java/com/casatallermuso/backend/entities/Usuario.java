@@ -2,6 +2,9 @@ package com.casatallermuso.backend.entities;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,6 +52,7 @@ public class Usuario {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="detalle_usuario_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private DetalleUsuario detalleUsuario;
 
 }
