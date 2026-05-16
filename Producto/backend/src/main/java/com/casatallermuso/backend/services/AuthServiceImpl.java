@@ -1,8 +1,11 @@
 package com.casatallermuso.backend.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.casatallermuso.backend.entities.RolUsuario;
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
 import com.casatallermuso.backend.repositories.RolRepository;
@@ -23,10 +26,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String loginOrThrow(String correo, String clave) {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
-            .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         
         if (!passwordEncoder.matches(clave, usuario.getClaveHash())) {
-            throw new RuntimeException("Credenciales inválidas");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!usuario.getActivo()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         return jwtUtils.generateToken(usuario);
@@ -38,9 +45,10 @@ public class AuthServiceImpl implements AuthService {
             passwordEncoder.encode(clave)
         );
 
-        rolRepository.findByTipoRol(TipoRolUsuario.CLIENTE).ifPresent((tipoUsuario) -> {
-            newUsuario.setRol(tipoUsuario);
-        });
+        RolUsuario rolCliente = rolRepository.findByTipoRol(TipoRolUsuario.CLIENTE)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+
+        newUsuario.setRol(rolCliente);
         newUsuario.setActivo(true);
 
         Usuario usuario = usuarioRepository.save(newUsuario);
