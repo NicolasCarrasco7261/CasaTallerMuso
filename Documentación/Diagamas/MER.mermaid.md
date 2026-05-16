@@ -82,16 +82,9 @@ erDiagram
 		hora time
 	}
 	
-	Etiqueta {
-		id uuid PK
-		nombre string
-	}
-	
 	Curso ||--|{ HorarioCurso : ""
 	Evento ||--|{ HorarioEvento : ""
 	Usuario }o--|| TipoUsuario : ""
 	Usuario ||--|| DetalleUsuario : ""
 	DetalleUsuario ||--|| UbicacionUsuario : ""
-	Curso }o--|{ Etiqueta : ""
-	Evento }o--|{ Etiqueta : ""
 ```
