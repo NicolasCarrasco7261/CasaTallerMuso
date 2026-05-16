@@ -53,6 +53,6 @@ public class Usuario {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="detalle_usuario_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private DetalleUsuario detalleUsuario;
+    private DetalleUsuario detalle;
 
 }

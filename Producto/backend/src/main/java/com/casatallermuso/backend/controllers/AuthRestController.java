@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.casatallermuso.backend.dto.AuthDTO;
-import com.casatallermuso.backend.dto.UsuarioDTO;
-import com.casatallermuso.backend.dto.UsuarioMapper;
+import com.casatallermuso.backend.dto.auth.AuthDTO;
+import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.services.AuthService;
 
@@ -30,9 +29,15 @@ public class AuthRestController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthDTO.Jwt> signup(@RequestBody @Valid UsuarioDTO.Registro signupDTO) {
-        Usuario newUsuario = usuarioMapper.toEntity(signupDTO);
-        String token = authService.signupOrThrow(newUsuario, signupDTO.getClave());
+    public ResponseEntity<AuthDTO.Jwt> signup(@RequestBody @Valid AuthDTO.Signup signupDTO) {
+        // Extrae perfil y credenciales
+        var perfil = signupDTO.getPerfil();
+        var credenciales = signupDTO.getCredenciales();
+        // Crea nuevo usuario con datos de perfil
+        Usuario newUsuario = usuarioMapper.toEntity(perfil);
+        newUsuario.setCorreo(credenciales.getCorreo());
+        // Intenta registrar nuevo usuario
+        String token = authService.signupOrThrow(newUsuario, credenciales.getClave());
         return ResponseEntity.ok(new AuthDTO.Jwt(token));
     } 
 
