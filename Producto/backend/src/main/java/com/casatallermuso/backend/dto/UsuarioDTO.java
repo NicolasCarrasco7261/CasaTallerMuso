@@ -3,6 +3,7 @@ package com.casatallermuso.backend.dto;
 import java.time.LocalDate;
 
 import com.casatallermuso.backend.enums.Genero;
+import com.casatallermuso.backend.enums.Region;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
 
 import jakarta.validation.constraints.Email;
@@ -16,6 +17,15 @@ import lombok.EqualsAndHashCode;
 public class UsuarioDTO {
 
     @Data
+    public static class UbicacionUsuarioDTO {
+        @NotBlank
+        private String direccion;
+
+        @NotNull
+        private Region region;
+    }
+
+    @Data
     public static class DetalleUsuarioDTO {
         @Past
         private LocalDate fechaNacimiento;
@@ -24,6 +34,7 @@ public class UsuarioDTO {
         private String numeroTelefonico;
 
         private Genero genero;
+        private UbicacionUsuarioDTO ubicacionUsuario;
     }
 
     @Data

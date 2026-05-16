@@ -15,6 +15,7 @@ public interface UsuarioMapperConfig {
     @Mapping(target = "activo", ignore = true)
     @Mapping(target = "rol", ignore = true)
     @Mapping(target = "detalleUsuario.id", ignore = true)
+    @Mapping(target = "detalleUsuario.ubicacionUsuario.id", ignore = true)
     @Named("ignorarCamposCliente")
     void ignorarCamposClienteTemplate(UsuarioDTO.BaseDTO dto, @MappingTarget Usuario entity);
 
