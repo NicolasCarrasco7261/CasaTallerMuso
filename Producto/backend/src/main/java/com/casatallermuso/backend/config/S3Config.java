@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.casatallermuso.backend.util.BucketValidator;
+
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 
 
 @Configuration
@@ -17,6 +20,9 @@ public class S3Config {
 
     @Value("${supabase.s3.endpoint}")
     private String endpoint;
+
+    @Value("${supabase.s3.region}")
+    private String region;
 
     @Value("${supabase.s3.access-key}")
     private String accessKey;
@@ -28,10 +34,23 @@ public class S3Config {
     public S3Client s3Client() {
         return S3Client.builder()
             .endpointOverride(URI.create(endpoint))
-            .region(Region.US_WEST_1)  // Ignorado por Supabase
+            .region(Region.of(region))
             .credentialsProvider(StaticCredentialsProvider.create(
                 AwsBasicCredentials.create(accessKey, secretKey)
-            )).build();
+            ))
+            .serviceConfiguration(
+                S3Configuration.builder()
+                .pathStyleAccessEnabled(true)
+                .build()
+            )
+            .build();
+    }
+
+    @Bean
+    public BucketValidator bucketValidators(
+        @Value("${supabase.s3.bucket.img}") String imagesBucketName
+    ) {
+        return new BucketValidator(imagesBucketName);
     }
 
 }
