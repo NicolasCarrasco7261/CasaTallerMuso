@@ -32,7 +32,7 @@ public class Curso {
     private String descripcion;
 
     @Column(nullable = false)
-    private String imagenUrl;
+    private String imagenStorageKey;
 
     @Column(nullable = false)
     private Integer precio;
