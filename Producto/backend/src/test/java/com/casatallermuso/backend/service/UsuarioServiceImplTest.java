@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.repositories.UsuarioRepository;
-import com.casatallermuso.backend.services.UsuarioServiceImpl;
+import com.casatallermuso.backend.services.impl.UsuarioServiceImpl;
 
 public class UsuarioServiceImplTest {
 

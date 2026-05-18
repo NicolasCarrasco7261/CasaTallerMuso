@@ -1,4 +1,4 @@
-package com.casatallermuso.backend.services;
+package com.casatallermuso.backend.services.impl;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.casatallermuso.backend.enums.TipoBucket;
+import com.casatallermuso.backend.services.S3Service;
 import com.casatallermuso.backend.util.BucketValidator;
 
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.casatallermuso.backend.services;
+package com.casatallermuso.backend.services.impl;
 
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.repositories.UsuarioRepository;
+import com.casatallermuso.backend.services.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 

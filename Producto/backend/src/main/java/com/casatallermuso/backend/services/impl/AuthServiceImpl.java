@@ -1,4 +1,4 @@
-package com.casatallermuso.backend.services;
+package com.casatallermuso.backend.services.impl;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +11,7 @@ import com.casatallermuso.backend.enums.TipoRolUsuario;
 import com.casatallermuso.backend.repositories.RolRepository;
 import com.casatallermuso.backend.repositories.UsuarioRepository;
 import com.casatallermuso.backend.security.JwtUtils;
+import com.casatallermuso.backend.services.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
