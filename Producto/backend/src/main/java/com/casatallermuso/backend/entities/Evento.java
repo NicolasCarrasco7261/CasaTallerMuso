@@ -1,5 +1,6 @@
 package com.casatallermuso.backend.entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +43,9 @@ public class Evento {
 
     @Column(nullable = false)
     private Boolean activo;
+
+    @Column(nullable = false)
+    private LocalDateTime creadoEn = LocalDateTime.now();
 
     @OneToMany(mappedBy = "evento")
     private List<HorarioEvento> horarios;
