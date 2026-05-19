@@ -14,10 +14,16 @@ public interface CursoMapper {
     HorarioCurso toEntity(HorarioCursoDTO dto);
     HorarioCursoDTO toHorarioCursoDTO(HorarioCurso horarioCurso);
 
-    Curso toEntity(CursoDTO.Card dto);
-    CursoDTO.Card toCursoCardDTO(Curso curso);
+    Curso toEntity(CursoDTO.CardView dto);
+    CursoDTO.CardView toCursoCardViewDTO(Curso curso);
 
-    Curso toEntity(CursoDTO.View dto);
-    CursoDTO.View toCursoViewDTO(Curso curso);
+    Curso toEntity(CursoDTO.ClientView dto);
+    CursoDTO.ClientView toCursoClientViewDTO(Curso curso);
+
+    Curso toEntity(CursoDTO.AdminView dto);
+    CursoDTO.AdminView toCursoAdminViewDTO(Curso curso);
+
+    Curso toEntity(CursoDTO.Post dto);
+    CursoDTO.Post toCursoPost(Curso curso);
 
 }

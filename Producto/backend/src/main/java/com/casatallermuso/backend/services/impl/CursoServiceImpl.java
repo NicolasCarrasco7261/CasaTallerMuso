@@ -29,4 +29,9 @@ public class CursoServiceImpl implements CursoService {
             .orElseThrow(() -> new RuntimeException("Curso no encontrado: " + id.toString()));
     }
 
+    @Override
+    public Curso crearCurso(Curso nuevoCurso) {
+        return cursoRepository.save(nuevoCurso);
+    }
+
 }

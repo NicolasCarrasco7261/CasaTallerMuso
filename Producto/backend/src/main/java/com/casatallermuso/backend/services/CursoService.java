@@ -11,5 +11,6 @@ public interface CursoService {
 
     Page<Curso> listarCursos(Pageable pageable);
     Curso obtenerPorID(UUID id);
+    Curso crearCurso(Curso nuevoCurso);
 
 }
