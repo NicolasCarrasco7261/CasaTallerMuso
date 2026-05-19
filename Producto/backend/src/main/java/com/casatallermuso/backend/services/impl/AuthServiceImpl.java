@@ -1,5 +1,6 @@
 package com.casatallermuso.backend.services.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String signupOrThrow(Usuario newUsuario, String clave) {
+    public Optional<String> createOrThrow(Usuario newUsuario, String clave, TipoRolUsuario tipoRolUsuario, boolean generateToken) {
         if (!passwordValidator.validate(clave)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -54,14 +55,19 @@ public class AuthServiceImpl implements AuthService {
             passwordEncoder.encode(clave)
         );
 
-        RolUsuario rolCliente = rolRepository.findByTipoRol(TipoRolUsuario.CLIENTE)
+        RolUsuario rolCliente = rolRepository.findByTipoRol(tipoRolUsuario)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
 
         newUsuario.setRol(rolCliente);
         newUsuario.setActivo(true);
 
         Usuario usuario = usuarioRepository.save(newUsuario);
-        return jwtUtils.generateToken(usuario);
+
+        if (generateToken) {
+            return Optional.of(jwtUtils.generateToken(usuario));
+        }
+
+        return Optional.empty();
     }
 
     @Override

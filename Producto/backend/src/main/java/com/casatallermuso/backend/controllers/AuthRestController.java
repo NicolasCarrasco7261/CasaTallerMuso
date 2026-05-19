@@ -1,5 +1,6 @@
 package com.casatallermuso.backend.controllers;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -10,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.casatallermuso.backend.annotations.RequiereAuth;
+import com.casatallermuso.backend.annotations.RequiereRol;
+import com.casatallermuso.backend.dto.admin.AdminOpsDTO;
 import com.casatallermuso.backend.dto.auth.AuthDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Usuario;
+import com.casatallermuso.backend.enums.TipoRolUsuario;
 import com.casatallermuso.backend.services.AuthService;
 
 import io.jsonwebtoken.Claims;
@@ -42,8 +46,11 @@ public class AuthRestController {
         Usuario newUsuario = usuarioMapper.toEntity(perfil);
         newUsuario.setCorreo(credenciales.getCorreo());
         // Intenta registrar nuevo usuario
-        String token = authService.signupOrThrow(newUsuario, credenciales.getClave());
-        return ResponseEntity.ok(new AuthDTO.Jwt(token));
+        Optional<String> token = authService.createOrThrow(newUsuario, credenciales.getClave(), TipoRolUsuario.CLIENTE, true);
+        if (token.isEmpty()) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(new AuthDTO.Jwt(token.get()));
     } 
 
     @PutMapping("/update")
@@ -58,6 +65,20 @@ public class AuthRestController {
             updateDTO.getNewClave()
         );
         return ResponseEntity.ok(new AuthDTO.Jwt(token));
+    }
+
+    @PostMapping("/a/create-user")
+    public ResponseEntity<Void> createUser(
+        @RequiereRol(TipoRolUsuario.ADMIN) Claims claims,
+        @RequestBody @Valid AdminOpsDTO.NuevoUsuario nuevoUsuarioDTO
+    ) {
+        var cuenta = nuevoUsuarioDTO.getCuenta();
+        var cred = nuevoUsuarioDTO.getCredenciales();
+
+        Usuario nuevoUsuario = usuarioMapper.toEntity(cuenta);
+        nuevoUsuario.setCorreo(cred.getCorreo());
+        authService.createOrThrow(nuevoUsuario, cred.getClave(), cuenta.getRol().getTipoRol(), false);
+        return ResponseEntity.noContent().build();
     }
 
 }

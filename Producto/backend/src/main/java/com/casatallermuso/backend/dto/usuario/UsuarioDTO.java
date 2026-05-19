@@ -26,6 +26,15 @@ public class UsuarioDTO {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
+    public static class PerfilId extends Perfil {
+
+        @NotNull
+        private UUID id;
+
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
     public static class PerfilCorreo extends Perfil {
 
         @NotBlank
@@ -36,7 +45,7 @@ public class UsuarioDTO {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class Cuenta extends PerfilCorreo {
+    public static class Cuenta extends Perfil {
 
         @NotNull
         private RolDTO rol;
@@ -48,19 +57,34 @@ public class UsuarioDTO {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class PerfilId extends Perfil {
+    public static class CuentaId extends PerfilId {
 
         @NotNull
-        private UUID id;
+        private RolDTO rol;
+
+        @NotNull
+        private Boolean activo;
 
     }
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class CuentaId extends Cuenta {
+    public static class CuentaCorreo extends PerfilCorreo {
+        
+        @NotNull
+        private RolDTO rol;
 
         @NotNull
-        private UUID id;
+        private Boolean activo;
+
+    }
+
+    @Data
+    public static class Update {
+
+        private String nombre;
+        private String apellido;
+        private DetalleDTO detalle;
 
     }
 

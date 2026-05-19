@@ -1,6 +1,8 @@
 package com.casatallermuso.backend.dto.usuario;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
 import com.casatallermuso.backend.entities.DetalleUsuario;
@@ -8,7 +10,10 @@ import com.casatallermuso.backend.entities.RolUsuario;
 import com.casatallermuso.backend.entities.UbicacionUsuario;
 import com.casatallermuso.backend.entities.Usuario;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface UsuarioMapper {
     
     UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
@@ -36,5 +41,7 @@ public interface UsuarioMapper {
 
     Usuario toEntity(UsuarioDTO.CuentaId cuentaId);
     UsuarioDTO.CuentaId toCuentaIdDTO(Usuario usuario);
+
+    void updateUsuarioFromDTO(UsuarioDTO.Update dto, @MappingTarget Usuario usuario);
 
 }
