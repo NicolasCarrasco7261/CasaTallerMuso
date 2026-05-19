@@ -1,5 +1,7 @@
 package com.casatallermuso.backend.dto.usuario;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,6 +43,24 @@ public class UsuarioDTO {
 
         @NotNull
         private Boolean activo;
+
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class PerfilId extends Perfil {
+
+        @NotNull
+        private UUID id;
+
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class CuentaId extends Cuenta {
+
+        @NotNull
+        private UUID id;
 
     }
 

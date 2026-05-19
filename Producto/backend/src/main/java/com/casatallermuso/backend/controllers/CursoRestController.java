@@ -121,7 +121,7 @@ public class CursoRestController {
     }
 
     @GetMapping("/{id}/a/inscripciones")
-    public ResponseEntity<Page<UsuarioDTO.PerfilCorreo>> listarUsuariosInscritos(
+    public ResponseEntity<Page<UsuarioDTO.PerfilId>> listarUsuariosInscritos(
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "5") int size,
@@ -131,7 +131,7 @@ public class CursoRestController {
 
         Curso curso = cursoService.obtenerPorID(id);
         var inscripciones = inscripcionService.findByCurso(curso, pageable);
-        var usuarios = inscripciones.map((u) -> usuarioMapper.toPerfilCorreoDTO(u.getUsuario()));
+        var usuarios = inscripciones.map((u) -> usuarioMapper.toPerfilIdDTO(u.getUsuario()));
 
         return ResponseEntity.ok(usuarios);
     }

@@ -31,4 +31,10 @@ public interface UsuarioMapper {
     Usuario toEntity(UsuarioDTO.Cuenta cuenta);
     UsuarioDTO.Cuenta toCuentaDTO(Usuario usuario);
 
+    Usuario toEntity(UsuarioDTO.PerfilId perfilId);
+    UsuarioDTO.PerfilId toPerfilIdDTO(Usuario usuario);
+
+    Usuario toEntity(UsuarioDTO.CuentaId cuentaId);
+    UsuarioDTO.CuentaId toCuentaIdDTO(Usuario usuario);
+
 }
