@@ -1,5 +1,7 @@
 package com.casatallermuso.backend.services.impl;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.casatallermuso.backend.repositories.RolRepository;
 import com.casatallermuso.backend.repositories.UsuarioRepository;
 import com.casatallermuso.backend.security.JwtUtils;
 import com.casatallermuso.backend.services.AuthService;
+import com.casatallermuso.backend.util.PasswordValidator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final PasswordValidator passwordValidator;
 
     @Override
     public String loginOrThrow(String correo, String clave) {
@@ -42,6 +46,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String signupOrThrow(Usuario newUsuario, String clave) {
+        if (!passwordValidator.validate(clave)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
         newUsuario.setClaveHash(
             passwordEncoder.encode(clave)
         );
@@ -54,6 +62,30 @@ public class AuthServiceImpl implements AuthService {
 
         Usuario usuario = usuarioRepository.save(newUsuario);
         return jwtUtils.generateToken(usuario);
+    }
+
+    @Override
+    public String updateCredentialsOrThrow(UUID usuarioId, String currentClave, String newCorreo, String newClave) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        
+        if (!passwordEncoder.matches(currentClave, usuario.getClaveHash())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        
+        if (newClave != null) {
+            if (!passwordValidator.validate(newClave)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            usuario.setClaveHash(
+                passwordEncoder.encode(newClave)
+            );
+        }
+
+        if (newCorreo != null) {
+            usuario.setCorreo(newCorreo);
+        }
+
+        Usuario usuarioDb = usuarioRepository.save(usuario);
+        return jwtUtils.generateToken(usuarioDb);
     }
     
 }

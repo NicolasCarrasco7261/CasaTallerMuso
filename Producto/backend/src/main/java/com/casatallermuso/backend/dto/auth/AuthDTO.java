@@ -2,6 +2,8 @@ package com.casatallermuso.backend.dto.auth;
 
 import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +16,11 @@ public class AuthDTO {
     @AllArgsConstructor
     public static class Login {
 
+        @Email
+        @NotNull
         private String correo;
+
+        @NotBlank
         private String clave;
 
     }
@@ -29,6 +35,21 @@ public class AuthDTO {
 
         @NotNull
         private UsuarioDTO.Perfil perfil;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Update {
+
+        @NotBlank
+        private String currentClave;
+
+        @Email
+        private String newCorreo;
+
+        private String newClave;
 
     }
 

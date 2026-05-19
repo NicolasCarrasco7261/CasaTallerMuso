@@ -1,16 +1,21 @@
 package com.casatallermuso.backend.controllers;
 
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.casatallermuso.backend.annotations.RequiereAuth;
 import com.casatallermuso.backend.dto.auth.AuthDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.services.AuthService;
 
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -40,5 +45,19 @@ public class AuthRestController {
         String token = authService.signupOrThrow(newUsuario, credenciales.getClave());
         return ResponseEntity.ok(new AuthDTO.Jwt(token));
     } 
+
+    @PutMapping("/update")
+    public ResponseEntity<AuthDTO.Jwt> update(
+        @RequiereAuth Claims claims,
+        @RequestBody @Valid AuthDTO.Update updateDTO
+    ) {
+        String token = authService.updateCredentialsOrThrow(
+            UUID.fromString(claims.getSubject()),
+            updateDTO.getCurrentClave(),
+            updateDTO.getNewCorreo(),
+            updateDTO.getNewClave()
+        );
+        return ResponseEntity.ok(new AuthDTO.Jwt(token));
+    }
 
 }
