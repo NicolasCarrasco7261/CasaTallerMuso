@@ -32,6 +32,4 @@ public class InscripcionEvento {
     @JoinColumn(name = "evento_id")
     private Evento evento;
 
-    // TODO: Agregar campo "fecha" a entidad o eliminar del MER
-
 }

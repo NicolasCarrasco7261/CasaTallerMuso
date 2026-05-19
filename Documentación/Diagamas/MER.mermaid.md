@@ -36,12 +36,10 @@ erDiagram
 	
 	InscripcionCurso {
 		id uuid PK
-		fecha date
 	}
 	
 	InscripcionEvento {
 		id uuid PK
-		fecha date
 	}
 	
 	Usuario ||--o{ InscripcionCurso : ""
