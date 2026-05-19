@@ -29,6 +29,7 @@ import com.casatallermuso.backend.services.InscripcionEventoService;
 import com.casatallermuso.backend.services.UsuarioService;
 
 import io.jsonwebtoken.Claims;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -77,7 +78,7 @@ public class EventoRestController {
 
     @PostMapping
     public ResponseEntity<EventoDTO.AdminView> crearEvento(
-        @RequestBody EventoDTO.Post eventoDto,
+        @RequestBody @Valid EventoDTO.Post eventoDto,
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims
     ) {
         Evento nuevoEvento = eventoMapper.toEntity(eventoDto);

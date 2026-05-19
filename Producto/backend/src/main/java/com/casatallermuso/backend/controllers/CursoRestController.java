@@ -29,6 +29,7 @@ import com.casatallermuso.backend.services.InscripcionCursoService;
 import com.casatallermuso.backend.services.UsuarioService;
 
 import io.jsonwebtoken.Claims;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -77,7 +78,7 @@ public class CursoRestController {
 
     @PostMapping
     public ResponseEntity<CursoDTO.AdminView> crearCurso(
-        @RequestBody CursoDTO.Post cursoDto,
+        @RequestBody @Valid CursoDTO.Post cursoDto,
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims
     ) {
         Curso nuevoCurso = cursoMapper.toEntity(cursoDto);
