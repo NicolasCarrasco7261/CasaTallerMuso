@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/CasaTallerMuso/static/css/main.9872b97e.css",
+    "main.js": "/CasaTallerMuso/static/js/main.50539521.js",
+    "static/media/Pottery.jpg": "/CasaTallerMuso/static/media/Pottery.eb320bf3959d665f005f.jpg",
+    "static/media/Workshop.jpg": "/CasaTallerMuso/static/media/Workshop.68e7a8b4ba252dbef576.jpg",
+    "static/media/Violin.jpg": "/CasaTallerMuso/static/media/Violin.e66ee39143436fa5858b.jpg",
+    "index.html": "/CasaTallerMuso/index.html",
+    "main.9872b97e.css.map": "/CasaTallerMuso/static/css/main.9872b97e.css.map",
+    "main.50539521.js.map": "/CasaTallerMuso/static/js/main.50539521.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9872b97e.css",
+    "static/js/main.50539521.js"
+  ]
+}
