@@ -5,6 +5,8 @@ import App from './App'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css' // Recuerda dejar este archivo vacío
 
+import './utils/api'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HashRouter>

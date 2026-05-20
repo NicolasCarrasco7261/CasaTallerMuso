@@ -10,7 +10,7 @@ export function apiUrlFromPath(requestPath) {
 
 window.fetch = async (requestPath, init) => {
     const token = localStorage.getItem('jwt') || null;
-    const requestUrl = apiUrlFromPath(requestPath);
+    const requestUrl = requestPath.startsWith("http") ? requestPath : apiUrlFromPath(requestPath);
 
     const logLines = [
         'Request outbound to API URL',
