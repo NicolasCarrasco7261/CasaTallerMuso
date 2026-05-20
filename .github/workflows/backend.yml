@@ -33,7 +33,7 @@ jobs:
       - name: deploy new jar
         run: |
           cd Producto/backend
-          scp target/muso-restapi.jar ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:~/app/backend.jar
+          scp target/muso-restapi.jar ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:~/app/backend.jar
       
       - name: restart backend service
-        run: ssh ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }} 'sudo systemctl restart musoapi.service'
+        run: ssh ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }} 'sudo systemctl restart musoapi.service'
