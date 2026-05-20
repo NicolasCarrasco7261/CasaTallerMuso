@@ -33,5 +33,4 @@ build/
 .vscode/
 
 ## Secrets & Env ##
-secret.properties
-env.properties
+.env.backend

@@ -35,5 +35,6 @@ public class SecurityConfig {
             throw new UnsupportedOperationException("Esta aplicación solo permite la autenticación mediante tokens JWT");
         };
     }
+
     
 }

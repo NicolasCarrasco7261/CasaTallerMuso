@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
-    private final PasswordValidator passwordValidator;
+    private PasswordValidator passwordValidator = new PasswordValidator();
 
     @Override
     public String loginOrThrow(String correo, String clave) {

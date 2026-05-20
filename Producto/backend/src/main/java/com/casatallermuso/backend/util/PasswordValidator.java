@@ -2,6 +2,7 @@ package com.casatallermuso.backend.util;
 
 import java.util.regex.Pattern;
 
+
 public class PasswordValidator {
 
     private final String LET = "a-zA-Z";

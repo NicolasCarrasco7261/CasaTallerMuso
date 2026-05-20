@@ -18,16 +18,16 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 @Configuration
 public class S3Config {
 
-    @Value("${supabase.s3.endpoint}")
+    @Value("${s3.endpoint}")
     private String endpoint;
 
-    @Value("${supabase.s3.region}")
+    @Value("${s3.region}")
     private String region;
 
-    @Value("${supabase.s3.access-key}")
+    @Value("${s3.accesskey}")
     private String accessKey;
 
-    @Value("${supabase.s3.secret-key}")
+    @Value("${s3.secretkey}")
     private String secretKey;
 
     @Bean
@@ -48,7 +48,7 @@ public class S3Config {
 
     @Bean
     public BucketValidator bucketValidators(
-        @Value("${supabase.s3.bucket.img}") String imagesBucketName
+        @Value("${s3.buckets.img}") String imagesBucketName
     ) {
         return new BucketValidator(imagesBucketName);
     }
