@@ -16,5 +16,6 @@ public interface InscripcionCursoService {
     public Page<InscripcionCurso> findByCurso(Curso curso, Pageable pageable);
     public Page<InscripcionCurso> findByUsuario(Usuario usuario, Pageable pageable);
     public boolean inscribirUsuario(Usuario usuario, Curso curso);
+    public void eliminarInscripcion(Usuario usuario, Curso curso);
 
 }

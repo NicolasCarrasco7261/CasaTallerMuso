@@ -6,11 +6,14 @@ import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.casatallermuso.backend.entities.Curso;
 import com.casatallermuso.backend.entities.InscripcionCurso;
 import com.casatallermuso.backend.entities.Usuario;
+import com.casatallermuso.backend.repositories.CursoRepository;
 import com.casatallermuso.backend.repositories.InscripcionCursoRepository;
 import com.casatallermuso.backend.services.InscripcionCursoService;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InscripcionCursoServiceImpl implements InscripcionCursoService {
 
+    private final CursoRepository cursoRepository;
     private final InscripcionCursoRepository inscripcionRepository;
 
     @Override
@@ -46,6 +50,13 @@ public class InscripcionCursoServiceImpl implements InscripcionCursoService {
         } catch (DataIntegrityViolationException e) {
             return false;
         }
+    }
+
+    @Override
+    public void eliminarInscripcion(Usuario usuario, Curso curso) {
+        var inscripcion = inscripcionRepository.findByUsuarioAndCurso(usuario, curso)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        inscripcionRepository.delete(inscripcion);
     }
 
 }

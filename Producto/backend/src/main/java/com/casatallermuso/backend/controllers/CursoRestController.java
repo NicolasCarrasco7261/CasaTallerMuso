@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -121,7 +122,19 @@ public class CursoRestController {
         }
     }
 
-    @GetMapping("/{id}/a/inscripciones")
+    @DeleteMapping("{id}/i")
+    public ResponseEntity<Void> eliminarInscripcionCurso(
+        @RequiereAuth Claims claims,
+        @PathVariable UUID id
+    ) {
+        UUID usuarioId = UUID.fromString(claims.getSubject());
+        Usuario usuario = usuarioService.obtenerPorId(usuarioId);
+        Curso curso = cursoService.obtenerPorID(id);
+        inscripcionService.eliminarInscripcion(usuario, curso);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/i/a")
     public ResponseEntity<Page<UsuarioDTO.PerfilId>> listarUsuariosInscritos(
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims,
         @RequestParam(defaultValue = "0") int page,
