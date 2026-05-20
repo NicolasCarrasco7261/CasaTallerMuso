@@ -1,0 +1,38 @@
+name: desplegar backend a máquina virtual
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      
+      - name: setup java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+        
+      - name: build
+        run: |
+          cd Producto/backend
+          ./mvnw clean package
+      
+      - name: setup ssh key
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: deploy new jar
+        run: |
+          cd Producto/backend
+          scp target/muso-restapi.jar ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:~/app/backend.jar
+      
+      - name: restart backend service
+        run: ssh ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }} 'sudo systemctl restart musoapi.service'

@@ -1,4 +1,4 @@
-name: desplegar a github pages
+name: desplegar frontend a github pages
 
 on:
   push:
