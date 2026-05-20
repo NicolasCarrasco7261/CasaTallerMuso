@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
-import Home from './Home'
-import Register from './Register'
-import Login from './Login'
-import Cursos from './Cursos'
+import Home from './paginas/Home/Home'
+import Register from './paginas/Register/Register'
+import Login from './paginas/Login/Login'
+import Cursos from './paginas/Cursos/Cursos'
 // Importamos los nuevos componentes
-import Dashboard from './Dashboard'
-import TuActividad from './TuActividad'
-import ProtectedRoute from './ProtectedRoute' // Asegúrate de haber creado este archivo
+import Dashboard from './paginas/Dashboard/Dashboard'
+import TuActividad from './paginas/TuActividad/TuActividad'
+import ProtectedRoute from './componentes/ProtectedRoute' // Asegúrate de haber creado este archivo
 
 function App() {
   return (
