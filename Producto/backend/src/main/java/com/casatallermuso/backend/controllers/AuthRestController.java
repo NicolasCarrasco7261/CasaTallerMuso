@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +15,11 @@ import com.casatallermuso.backend.annotations.RequiereAuth;
 import com.casatallermuso.backend.annotations.RequiereRol;
 import com.casatallermuso.backend.dto.admin.AdminOpsDTO;
 import com.casatallermuso.backend.dto.auth.AuthDTO;
+import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Usuario;
+import com.casatallermuso.backend.enums.Genero;
+import com.casatallermuso.backend.enums.Region;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
 import com.casatallermuso.backend.services.AuthService;
 
@@ -52,6 +56,14 @@ public class AuthRestController {
         }
         return ResponseEntity.ok(new AuthDTO.Jwt(token.get()));
     } 
+
+    @GetMapping("/signup")
+    public ResponseEntity<AuthDTO.SignupFields> getSignupFields() {
+        var fields = new AuthDTO.SignupFields();
+        fields.setGenero(Genero.values());
+        fields.setRegion(Region.values());
+        return ResponseEntity.ok(fields);
+    }
 
     @PutMapping("/update")
     public ResponseEntity<AuthDTO.Jwt> update(

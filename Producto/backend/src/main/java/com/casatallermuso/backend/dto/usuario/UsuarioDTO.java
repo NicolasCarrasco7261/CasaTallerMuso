@@ -22,6 +22,9 @@ public class UsuarioDTO {
         @NotNull
         private DetalleDTO detalle;
 
+        @NotNull
+        private RolDTO rol;
+
     }
 
     @Data
@@ -48,9 +51,6 @@ public class UsuarioDTO {
     public static class Cuenta extends Perfil {
 
         @NotNull
-        private RolDTO rol;
-
-        @NotNull
         private Boolean activo;
 
     }
@@ -58,9 +58,6 @@ public class UsuarioDTO {
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class CuentaId extends PerfilId {
-
-        @NotNull
-        private RolDTO rol;
 
         @NotNull
         private Boolean activo;
@@ -71,9 +68,6 @@ public class UsuarioDTO {
     @EqualsAndHashCode(callSuper = true)
     public static class CuentaCorreo extends PerfilCorreo {
         
-        @NotNull
-        private RolDTO rol;
-
         @NotNull
         private Boolean activo;
 

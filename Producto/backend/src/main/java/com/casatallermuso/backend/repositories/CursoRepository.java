@@ -10,4 +10,6 @@ import com.casatallermuso.backend.entities.Curso;
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, UUID> {
 
+    public long countByActivo(boolean activo);
+
 }

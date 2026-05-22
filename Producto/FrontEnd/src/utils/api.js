@@ -19,6 +19,10 @@ window.fetch = async (requestPath, init) => {
     ].filter(Boolean);
     console.log(logLines.join(" "));
 
+    if (requestPath.startsWith("http")) {
+        console.warn("Using absolute URL");
+    }
+
     if (!init) init = {};
     init.headers = {
         ...init.headers,

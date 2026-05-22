@@ -1,6 +1,8 @@
 package com.casatallermuso.backend.dto.auth;
 
 import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
+import com.casatallermuso.backend.enums.Genero;
+import com.casatallermuso.backend.enums.Region;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -35,6 +37,19 @@ public class AuthDTO {
 
         @NotNull
         private UsuarioDTO.Perfil perfil;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SignupFields {
+
+        @NotNull
+        private Genero[] genero;
+
+        @NotNull
+        private Region[] region;
 
     }
 

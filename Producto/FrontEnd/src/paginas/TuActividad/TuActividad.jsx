@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import Navbar from '../../componentes/Navbar';
+import Navbar from '../../componentes/Navbar/Navbar';
 import '../Cursos/Cursos.css'; 
 
 const TuActividad = () => {

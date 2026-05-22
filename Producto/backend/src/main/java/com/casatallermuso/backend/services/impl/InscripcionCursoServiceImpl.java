@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.casatallermuso.backend.entities.Curso;
 import com.casatallermuso.backend.entities.InscripcionCurso;
 import com.casatallermuso.backend.entities.Usuario;
-import com.casatallermuso.backend.repositories.CursoRepository;
 import com.casatallermuso.backend.repositories.InscripcionCursoRepository;
 import com.casatallermuso.backend.services.InscripcionCursoService;
 
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InscripcionCursoServiceImpl implements InscripcionCursoService {
 
-    private final CursoRepository cursoRepository;
     private final InscripcionCursoRepository inscripcionRepository;
 
     @Override
@@ -43,10 +41,14 @@ public class InscripcionCursoServiceImpl implements InscripcionCursoService {
 
     @Override
     public boolean inscribirUsuario(Usuario usuario, Curso curso) {
+        Long cuposRestantes = curso.getCupos() - inscripcionRepository.countByCurso(curso);
         try {
-            InscripcionCurso nuevaInscripcion = new InscripcionCurso(null, usuario, curso);
-            inscripcionRepository.save(nuevaInscripcion);
-            return true;
+            if (cuposRestantes > 0) {
+                InscripcionCurso nuevaInscripcion = new InscripcionCurso(null, usuario, curso);
+                inscripcionRepository.save(nuevaInscripcion);
+                return true;
+            }
+            return false;
         } catch (DataIntegrityViolationException e) {
             return false;
         }
@@ -57,6 +59,19 @@ public class InscripcionCursoServiceImpl implements InscripcionCursoService {
         var inscripcion = inscripcionRepository.findByUsuarioAndCurso(usuario, curso)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         inscripcionRepository.delete(inscripcion);
+    }
+
+    @Override
+    public boolean isUsuarioInscrito(Usuario usuario, Curso curso) {
+        var inscripcion = inscripcionRepository.findByUsuarioAndCurso(usuario, curso);
+        return (inscripcion.isPresent());
+    }
+
+    @Override
+    public Long getCuposRestantes(Curso curso) {
+        Long cuposTomados = inscripcionRepository.countByCurso(curso);
+        Long cuposRestantes = curso.getCupos() - cuposTomados;
+        return cuposRestantes;
     }
 
 }

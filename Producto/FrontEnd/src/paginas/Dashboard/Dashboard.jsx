@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Navbar from "../../componentes/Navbar";
+import Navbar from "../../componentes/Navbar/Navbar";
 
 const Dashboard = () => {
   const [cursosActivos, setCursosActivos] = useState([]);

@@ -26,6 +26,8 @@ public class CursoDTO {
         @NotNull
         private Integer cupos;
 
+        private Integer cuposRestantes;
+
     }
 
     @Data

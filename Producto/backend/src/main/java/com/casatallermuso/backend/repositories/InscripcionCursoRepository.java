@@ -18,5 +18,6 @@ public interface InscripcionCursoRepository extends JpaRepository<InscripcionCur
     Page<InscripcionCurso> findByUsuario(Usuario usuario, Pageable pageable);
     Page<InscripcionCurso> findByCurso(Curso curso, Pageable pageable);
     Optional<InscripcionCurso> findByUsuarioAndCurso(Usuario usuario, Curso curso);
+    Long countByCurso(Curso curso);
     
 }

@@ -10,4 +10,6 @@ import com.casatallermuso.backend.entities.Evento;
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, UUID> {
 
+    public long countByActivo(boolean activo);
+
 }

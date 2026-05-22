@@ -1,35 +1,46 @@
 import { useState, useEffect, useCallback } from "react"; // Añadimos useCallback
 import { useNavigate } from "react-router-dom";
 import "./Cursos.css";
-import Navbar from "../../componentes/Navbar";
+import Navbar from "../../componentes/Navbar/Navbar";
+import { createCursoCard } from "../../objetos/Curso";
+import CursoCard from "../../componentes/CursoCard/CursoCard";
+import PageNav from "../../componentes/PageNav/PageNav";
 
-const Cursos = () => {
-  const [listaCursos, setListaCursos] = useState([]);
+export default function Cursos() {
+  const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagina, setPagina] = useState(0);
+  const [numPaginas, setNumPaginas] = useState(0);
   const navigate = useNavigate();
 
-  // 1. Memorizamos la función con useCallback para evitar el error de renders en cascada
-  const obtenerCursos = useCallback(async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/cursos");
-      if (!response.ok) throw new Error("Error al obtener los datos");
-      const data = await response.json();
-      
-      // Filtrar activos y actualizar el estado
-      setListaCursos(data.filter(c => c.activo !== false));
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []); // Dependencias vacías: solo se crea una vez
-
-  // 2. El useEffect ahora es "seguro" porque obtenerCursos es estable
   useEffect(() => {
-    obtenerCursos();
-  }, [obtenerCursos]);
+    const fetchData = async () => {
+      setLoading(true);
+      setCursos(null);
+      
+      const res = await fetch(`/api/cursos?page=${pagina}&size=6`);
+      if (!res.ok) {
+        setError(`«${res.status}»`);
+        return;
+      }
+      const data = await res.json();
+      const cursoCards = data.content.map(c => createCursoCard(c));
+
+      setCursos(cursoCards);
+      setNumPaginas(data.totalPages);
+      setLoading(false);
+    };
+    fetchData();
+  }, [pagina]);
+
+  const handleSetPagina = (pag) => {
+    if (pag >= 0 && pag < numPaginas) {
+      setPagina(pag);
+    } else {
+      console.warn(`Se intentó buscar en página inválida (${pag}/${numPaginas})`);
+    }
+  };
 
   const manejarInscripcion = async (cursoId) => {
     const usuarioLogueado = JSON.parse(localStorage.getItem("usuario"));
@@ -69,79 +80,34 @@ const Cursos = () => {
   if (loading) return <div className="text-center py-5">Cargando catálogo...</div>;
   if (error) return <div className="text-center py-5 text-danger">Error: {error}</div>;
 
-  return (
-    <div className="min-vh-100 bg-custom-cream text-start">
-      <Navbar />
+  const numPagBtns = Math.min(5, numPaginas);
+  const distToEnd = numPaginas - pagina;
+  const pagBtnVals = Array.from(
+    { length: numPagBtns },
+    (_, i) => (i + pagina) - Math.min(pagina, 1) - Math.max(-distToEnd + numPagBtns - 1, 0)
+  );
+  pagBtnVals.splice(5);
 
+  return (
+    <>
       <header className="py-5 text-center bg-white shadow-sm border-bottom mb-5">
         <span className="text-uppercase tracking-widest text-brand fw-bold">
           Nuestros Cursos
         </span>
       </header>
 
-      <main className="container pb-5">
-        <div className="row g-4">
-          {listaCursos.length > 0 ? (
-            listaCursos.map((curso) => (
-              <div className="col-12 col-md-6 col-lg-4" key={curso.id}>
-                <div className="curso-card bg-white shadow-sm h-100 border-0 shadow-hover">
-                  <div className="curso-image-container position-relative overflow-hidden">
-                    <img
-                      src={curso.img || "https://via.placeholder.com/400x250?text=Muso+Arte"}
-                      alt={curso.titulo}
-                      className="curso-img w-100"
-                    />
-                    <span className="category-badge-overlay shadow-sm">
-                      {curso.categoriaA?.nombre || "General"}
-                    </span>
-                  </div>
-
-                  <div className="p-4 text-center">
-                    <h4 className="fw-bold mb-2">{curso.titulo}</h4>
-                    <p className="text-muted small mb-3">{curso.descripcion}</p>
-
-                    <div className="d-flex flex-column align-items-center gap-1 mb-4">
-                      <span className="style-horario fw-semibold text-secondary">
-                        <i className="bi bi-clock me-1"></i> {curso.horario}
-                      </span>
-                      <div className="mt-1">
-                        {curso.cupos > 0 ? (
-                          <span className="badge rounded-pill bg-light text-success border border-success-subtle">
-                            {curso.cupos} cupos disponibles
-                          </span>
-                        ) : (
-                          <span className="badge rounded-pill bg-light text-danger border border-danger-subtle">
-                            Agotado
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
-                      <span className="fw-bold text-brand fs-5">
-                        ${Number(curso.precio).toLocaleString("es-CL")}
-                      </span>
-                      <button
-                        className={`btn ${curso.cupos > 0 ? 'btn-brand' : 'btn-secondary'} rounded-0 px-3 py-2 fw-bold small`}
-                        disabled={curso.cupos <= 0}
-                        onClick={() => manejarInscripcion(curso.id)}
-                      >
-                        {curso.cupos > 0 ? "Inscribirse" : "Sin Cupos"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
+      <div className="row g-4">
+        {cursos.length > 0 ? (
+          cursos.map((curso, i) => <CursoCard key={i} curso={curso} />)
           ) : (
             <div className="col-12 text-center py-5">
               <h3 className="text-muted">No hay registros disponibles</h3>
             </div>
-          )}
-        </div>
-      </main>
-    </div>
+          )
+        }
+      </div>
+
+      <PageNav page={pagina} numPages={numPaginas} setPage={setPagina} />
+    </>
   );
 };
-
-export default Cursos;

@@ -20,6 +20,7 @@ import com.casatallermuso.backend.annotations.RequiereAuth;
 import com.casatallermuso.backend.annotations.RequiereRol;
 import com.casatallermuso.backend.dto.curso.CursoDTO;
 import com.casatallermuso.backend.dto.curso.CursoMapper;
+import com.casatallermuso.backend.dto.inscripcion.InscripcionDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Curso;
@@ -54,7 +55,13 @@ public class CursoRestController {
         PageRequest pageable = PageRequest.of(page, size, sort);
 
         Page<Curso> cursos = cursoService.listarCursos(pageable);
-        Page<CursoDTO.CardView> dtoPage = cursos.map(c -> cursoMapper.toCursoCardViewDTO(c));
+        Page<CursoDTO.CardView> dtoPage = cursos.map(c -> {
+            var card = cursoMapper.toCursoCardViewDTO(c);
+            card.setCuposRestantes(
+                inscripcionService.getCuposRestantes(c).intValue()
+            );
+            return card;
+        });
 
         return ResponseEntity.ok(dtoPage);
     }
@@ -65,6 +72,9 @@ public class CursoRestController {
     ) {
         Curso curso = cursoService.obtenerPorID(id);
         CursoDTO.ClientView cursoDto = cursoMapper.toCursoClientViewDTO(curso);
+        cursoDto.setCuposRestantes(
+            inscripcionService.getCuposRestantes(curso).intValue()
+        );
         return ResponseEntity.ok(cursoDto);
     }
 
@@ -74,6 +84,9 @@ public class CursoRestController {
     ) {
         Curso curso = cursoService.obtenerPorID(id);
         CursoDTO.AdminView cursoDto = cursoMapper.toCursoAdminViewDTO(curso);
+        cursoDto.setCuposRestantes(
+            inscripcionService.getCuposRestantes(curso).intValue()
+        );
         return ResponseEntity.ok(cursoDto);
     }
 
@@ -103,6 +116,21 @@ public class CursoRestController {
         var inscripciones = inscripcionService.findByUsuario(usuario, pageable);
         var cursos = inscripciones.map((i) -> cursoMapper.toCursoCardViewDTO(i.getCurso()));
         return ResponseEntity.ok(cursos);
+    }
+
+    @GetMapping("{id}/i")
+    public ResponseEntity<InscripcionDTO.UsuarioInscrito> verificarInscripcionCurso(
+        @RequiereAuth Claims claims,
+        @PathVariable UUID id
+    ) {
+        UUID usuarioId = UUID.fromString(claims.getSubject());
+        Usuario usuario = usuarioService.obtenerPorId(usuarioId);
+        Curso curso = cursoService.obtenerPorID(id);
+        
+        var inscrito = inscripcionService.isUsuarioInscrito(usuario, curso);
+        var response = new InscripcionDTO.UsuarioInscrito(inscrito);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("{id}/i")
