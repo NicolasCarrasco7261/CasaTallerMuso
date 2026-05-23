@@ -27,6 +27,8 @@ jobs:
         run: |
           cd Producto/FrontEnd
           npm run build
+        env:
+          VITE_REACT_APP_BACKEND_URL: ${{ vars.API_PROTOCOL }}://${{ vars.REMOTE_HOST }}:${{ vars.API_PORT }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
