@@ -162,7 +162,8 @@ export default function Register() {
                 type="password" 
                 name="clave" 
                 className="form-control register-input" 
-                placeholder="••••••••" 
+                placeholder="Mín. 8 caracteres, letras y números" 
+                pattern='^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%&*()_+={}:;<>,.?~ \-\[\]\^]{8,64}$'
                 onChange={handleChange} 
                 required 
               />

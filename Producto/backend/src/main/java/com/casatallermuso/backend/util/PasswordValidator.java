@@ -11,7 +11,6 @@ public class PasswordValidator {
     private final String VALIDATION_REGEX =
         "^(?=.*[" + LET + "])"              // al menos una letra
         + "(?=.*[" + NUM + "])"             // al menos un número
-        + "(?=.*[" + SYM + "])"             // al menos un símbolo
         + "[" + LET + NUM + SYM + "]+$";    // solo carácteres permitidos
 
     private final int MIN_LENGTH = 8;
