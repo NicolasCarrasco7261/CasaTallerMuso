@@ -54,11 +54,13 @@ export default function Home() {
         <div className="d-flex flex-wrap align-items-center justify-content-lg-end gap-3">
           {
             stats && <>
+              {/*
               <StatLabelBtn
                 number={stats.eventosDisponibles}
                 text={stats.eventosDisponibles == 1 ? 'Evento disponible' : 'Eventos disponibles'}
                 onClick={() => { navigate("/eventos") }}
               />
+              */}
               <StatLabelBtn
                 number={stats.cursosDisponibles}
                 text={stats.cursosDisponibles == 1 ? 'Curso disponible' : 'Cursos disponibles'}
