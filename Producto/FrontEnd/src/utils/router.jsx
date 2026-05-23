@@ -1,10 +1,11 @@
 import { createHashRouter } from "react-router-dom";
-import { AuthLayout, PublicLayout } from "../paginas/Layouts";
+import { AuthLayout, DashboardLayout, PublicLayout } from "../paginas/Layouts";
 import Home from "../paginas/Home/Home";
 import Login from "../paginas/Login/Login";
 import Register from "../paginas/Register/Register";
 import Cursos from "../paginas/Cursos/Cursos";
 import CursoPage from "../paginas/Cursos/CursoPage";
+import TuActividad from "../paginas/TuActividad/TuActividad";
 
 const router = createHashRouter([
   {
@@ -36,6 +37,19 @@ const router = createHashRouter([
       {
         path: "/auth/signup",
         element: <Register />
+      }
+    ]
+  },
+  {
+    path: "/me",
+    element: <DashboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <TuActividad />
+      },
+      {
+        path: "/me/dashboard"
       }
     ]
   }

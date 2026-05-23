@@ -16,7 +16,7 @@ export default function PageNav({ page, setPage, numPages }) {
   pagBtnVals.splice(5);
 
   return (
-    <div style={{ width: "fit-content" }} className="d-flex gap-4 m-auto py-5">
+    <div style={{ width: "fit-content" }} className="d-flex gap-4 m-auto">
       <button
         className="btn btn-brand rounded-2"
         onClick={() => handleSetPage(page - 1)}

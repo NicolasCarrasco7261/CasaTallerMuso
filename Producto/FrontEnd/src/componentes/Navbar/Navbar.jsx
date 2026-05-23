@@ -53,11 +53,11 @@ function NavbarContent() {
 
 
     {user.rol?.tipoRol === "Administrador" ? (
-      <Link to="/dashboard" className="btn btn-brand-outline rounded-pill px-4">
+      <Link to="/me/dashboard" className="btn btn-brand-outline rounded-pill px-4">
         Dashboard
       </Link>
     ) : (
-      <Link to="/tuActividad" className="btn btn-brand-outline rounded-pill px-4">
+      <Link to="/me" className="btn btn-brand-outline rounded-pill px-4">
         Tú actividad
       </Link>
     )}

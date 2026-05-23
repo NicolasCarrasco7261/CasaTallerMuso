@@ -96,7 +96,7 @@ export default function Cursos() {
         </span>
       </header>
 
-      <div className="row g-4">
+      <div className="row g-4 mb-5">
         {cursos.length > 0 ? (
           cursos.map((curso, i) => <CursoCard key={i} curso={curso} />)
           ) : (

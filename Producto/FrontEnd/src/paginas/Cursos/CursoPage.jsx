@@ -36,8 +36,6 @@ export default function CursoPage() {
   }, [id]);
 
   useEffect(() => {
-    setInscrito(false);
-
     const checkInscrito = async() => {
       try {
         const res = await fetch(`/api/cursos/${id}/i`);
