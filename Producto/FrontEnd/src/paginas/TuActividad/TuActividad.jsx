@@ -82,7 +82,7 @@ export default function TuActividad() {
           inscripciones.length == 0 ? (
             <div className="text-center m-3 py-5 bg-white rounded-3 border">
               <p className="text-muted mb-4">Aún no te has inscrito en ningún curso.</p>
-              <a href="/cursos" className="btn btn-brand fw-bold px-4 py-2">Explorar Catálogo</a>
+              <Link to="/cursos" className="btn btn-brand fw-bold px-4 py-2">Explorar Catálogo</Link>
             </div>
           ) : (
             <div className='d-flex flex-column gap-3 p-3 m-3 bg-white rounded-3 border overflow-hidden'>
