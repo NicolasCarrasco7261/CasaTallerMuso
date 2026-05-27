@@ -53,36 +53,41 @@ export default function Register() {
       return;
     }
 
-    const nuevoUsuario = {
-      credenciales: {
-        correo: correo,
-        clave: clave
-      },
-      perfil: {
-        nombre: nombre,
-        apellido: apellido,
-        detalle: {
-          fechaNacimiento: fechaNacimiento,
-          genero: genero,
-          ubicacionUsuario: null
-        }
-      }
-    };
-
     if (direccion || region) {
       if (!direccion) {
         alert("Por favor ingrese su dirección o elimine su región.");
         return;
-      } else if (!region) {
+      }
+      
+      if (!region) {
         alert("Por favor ingrese su región o elimine su dirección.")
         return;
       }
-      nuevoUsuario.perfil.detalle.ubicacionUsuario = {
-        direccion: direccion,
-        region: region
-      }
     }
 
+    const detalle = {
+      fechaNacimiento,
+      genero
+    };
+
+    if (direccion && region) {
+      detalle.ubicacionUsuario = {
+        direccion,
+        region
+      };
+    }
+
+    const nuevoUsuario = {
+      credenciales: {
+        correo,
+        clave
+      },
+      perfil: {
+        nombre,
+        apellido,
+        detalle
+      }
+    };
 
     try {
       const response = await fetch("/api/auth/signup", {
@@ -164,7 +169,7 @@ export default function Register() {
                 name="clave" 
                 className="form-control register-input" 
                 placeholder="Mín. 8 caracteres, letras y números" 
-                pattern='^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%&*()_+={}:;<>,.?~ \-\[\]\^]{8,64}$'
+                pattern="^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9!@#$%&*\(\)_+=\{\}:;<>,.?~ \[\]^.\-]{8,64}$"
                 onChange={handleChange} 
                 required 
               />
