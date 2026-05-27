@@ -63,7 +63,8 @@ export default function Register() {
         apellido: apellido,
         detalle: {
           fechaNacimiento: fechaNacimiento,
-          genero: genero
+          genero: genero,
+          ubicacionUsuario: null
         }
       }
     };
@@ -76,7 +77,7 @@ export default function Register() {
         alert("Por favor ingrese su región o elimine su dirección.")
         return;
       }
-      nuevoUsuario.detalle.ubicacionUsuario = {
+      nuevoUsuario.perfil.detalle.ubicacionUsuario = {
         direccion: direccion,
         region: region
       }
