@@ -216,7 +216,7 @@ export default function Register() {
               </div>
               <div className="col-md-6 mb-3">
                 <label className="register-label">Región</label>
-                <select name='region' className='form-control register-input'>
+                <select name='region' className='form-control register-input' onChange={handleChange}>
                   <option value="" hidden>«Seleccionar Región»</option>
                   {
                     fields.region.map((r, i) => (
