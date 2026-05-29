@@ -40,7 +40,7 @@ export default function Register() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value.trim()
     });
   };
 
@@ -48,18 +48,23 @@ export default function Register() {
     e.preventDefault();
     const { nombre, apellido, correo, clave, genero, fechaNacimiento, direccion, region } = formData;
 
-    if (!nombre || !apellido || !correo || !clave) {
+    if (
+      !nombre?.trim() ||
+      !apellido?.trim() ||
+      !correo?.trim() ||
+      !clave?.trim()
+    ) {
       alert("Por favor, completa todos los campos requeridos.");
       return;
     }
 
     if (direccion || region) {
-      if (!direccion) {
+      if (!direccion?.trim()) {
         alert("Por favor ingrese su dirección o elimine su región.");
         return;
       }
       
-      if (!region) {
+      if (!region?.trim()) {
         alert("Por favor ingrese su región o elimine su dirección.")
         return;
       }
@@ -157,6 +162,7 @@ export default function Register() {
                 name="correo" 
                 className="form-control register-input" 
                 placeholder="correo@ejemplo.com" 
+                pattern="/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/g"
                 onChange={handleChange} 
                 required 
               />
