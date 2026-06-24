@@ -24,10 +24,11 @@ import com.casatallermuso.backend.dto.inscripcion.InscripcionDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Curso;
+import com.casatallermuso.backend.entities.InscripcionCurso;
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
-import com.casatallermuso.backend.services.CursoService;
-import com.casatallermuso.backend.services.InscripcionCursoService;
+import com.casatallermuso.backend.services.ActividadService;
+import com.casatallermuso.backend.services.InscripcionService;
 import com.casatallermuso.backend.services.UsuarioService;
 
 import io.jsonwebtoken.Claims;
@@ -39,8 +40,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CursoRestController {
 
-    private final CursoService cursoService;
-    private final InscripcionCursoService inscripcionService;
+    private final ActividadService<Curso> cursoService;
+    private final InscripcionService<InscripcionCurso, Curso> inscripcionService;
     private final UsuarioService usuarioService;
 
     private final CursoMapper cursoMapper;
@@ -54,7 +55,7 @@ public class CursoRestController {
         Sort sort = Sort.by("creadoEn").descending();
         PageRequest pageable = PageRequest.of(page, size, sort);
 
-        Page<Curso> cursos = cursoService.listarCursos(pageable);
+        Page<Curso> cursos = cursoService.listar(pageable);
         Page<CursoDTO.CardView> dtoPage = cursos.map(c -> {
             var card = cursoMapper.toCursoCardViewDTO(c);
             card.setCuposRestantes(
@@ -70,7 +71,7 @@ public class CursoRestController {
     public ResponseEntity<CursoDTO.ClientView> obtenerCurso(
         @PathVariable UUID id
     ) {
-        Curso curso = cursoService.obtenerPorID(id);
+        Curso curso = cursoService.buscarPorID(id);
         CursoDTO.ClientView cursoDto = cursoMapper.toCursoClientViewDTO(curso);
         cursoDto.setCuposRestantes(
             inscripcionService.getCuposRestantes(curso).intValue()
@@ -82,7 +83,7 @@ public class CursoRestController {
     public ResponseEntity<CursoDTO.AdminView> obtenerCursoAdmin(
         @PathVariable UUID id
     ) {
-        Curso curso = cursoService.obtenerPorID(id);
+        Curso curso = cursoService.buscarPorID(id);
         CursoDTO.AdminView cursoDto = cursoMapper.toCursoAdminViewDTO(curso);
         cursoDto.setCuposRestantes(
             inscripcionService.getCuposRestantes(curso).intValue()
@@ -96,7 +97,7 @@ public class CursoRestController {
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims
     ) {
         Curso nuevoCurso = cursoMapper.toEntity(cursoDto);
-        Curso cursoDb = cursoService.crearCurso(nuevoCurso);
+        Curso cursoDb = cursoService.guardar(nuevoCurso);
         return ResponseEntity.ok(cursoMapper.toCursoAdminViewDTO(cursoDb));
     }
 
@@ -114,7 +115,9 @@ public class CursoRestController {
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
 
         var inscripciones = inscripcionService.findByUsuario(usuario, pageable);
-        var cursos = inscripciones.map((i) -> cursoMapper.toCursoCardViewDTO(i.getCurso()));
+        var cursos = inscripciones.map(i ->
+            cursoMapper.toCursoCardViewDTO(i.getActividad())
+        );
         return ResponseEntity.ok(cursos);
     }
 
@@ -125,8 +128,8 @@ public class CursoRestController {
     ) {
         UUID usuarioId = UUID.fromString(claims.getSubject());
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
-        Curso curso = cursoService.obtenerPorID(id);
-        
+        Curso curso = cursoService.buscarPorID(id);
+
         var inscrito = inscripcionService.isUsuarioInscrito(usuario, curso);
         var response = new InscripcionDTO.UsuarioInscrito(inscrito);
 
@@ -140,14 +143,9 @@ public class CursoRestController {
     ) {
         UUID usuarioId = UUID.fromString(claims.getSubject());
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
-        Curso curso = cursoService.obtenerPorID(id);
-
-        boolean inscritoExitosamente = inscripcionService.inscribirUsuario(usuario, curso);
-        if (inscritoExitosamente) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        Curso curso = cursoService.buscarPorID(id);
+        inscripcionService.inscribirUsuario(usuario, curso);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("{id}/i")
@@ -157,7 +155,7 @@ public class CursoRestController {
     ) {
         UUID usuarioId = UUID.fromString(claims.getSubject());
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
-        Curso curso = cursoService.obtenerPorID(id);
+        Curso curso = cursoService.buscarPorID(id);
         inscripcionService.eliminarInscripcion(usuario, curso);
         return ResponseEntity.noContent().build();
     }
@@ -171,11 +169,12 @@ public class CursoRestController {
     ) {
         PageRequest pageable = PageRequest.of(page, size);
 
-        Curso curso = cursoService.obtenerPorID(id);
-        var inscripciones = inscripcionService.findByCurso(curso, pageable);
-        var usuarios = inscripciones.map((u) -> usuarioMapper.toPerfilIdDTO(u.getUsuario()));
+        Curso curso = cursoService.buscarPorID(id);
+        var inscripciones = inscripcionService.findByActividad(curso, pageable);
+        var usuarios = inscripciones.map(u ->
+            usuarioMapper.toPerfilIdDTO(u.getUsuario())
+        );
 
         return ResponseEntity.ok(usuarios);
     }
-    
 }

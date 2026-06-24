@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,10 +23,11 @@ import com.casatallermuso.backend.dto.evento.EventoMapper;
 import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Evento;
+import com.casatallermuso.backend.entities.InscripcionEvento;
 import com.casatallermuso.backend.entities.Usuario;
 import com.casatallermuso.backend.enums.TipoRolUsuario;
-import com.casatallermuso.backend.services.EventoService;
-import com.casatallermuso.backend.services.InscripcionEventoService;
+import com.casatallermuso.backend.services.ActividadService;
+import com.casatallermuso.backend.services.InscripcionService;
 import com.casatallermuso.backend.services.UsuarioService;
 
 import io.jsonwebtoken.Claims;
@@ -37,8 +39,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EventoRestController {
 
-    private final EventoService eventoService;
-    private final InscripcionEventoService inscripcionService;
+    private final ActividadService<Evento> eventoService;
+    private final InscripcionService<InscripcionEvento, Evento> inscripcionService;
     private final UsuarioService usuarioService;
 
     private final EventoMapper eventoMapper;
@@ -52,8 +54,10 @@ public class EventoRestController {
         Sort sort = Sort.by("creadoEn").descending();
         PageRequest pageable = PageRequest.of(page, size, sort);
 
-        Page<Evento> eventos = eventoService.listarEventos(pageable);
-        Page<EventoDTO.CardView> dtoPage = eventos.map(c -> eventoMapper.toEventoCardViewDTO(c));
+        Page<Evento> eventos = eventoService.listar(pageable);
+        Page<EventoDTO.CardView> dtoPage = eventos.map(c ->
+            eventoMapper.toEventoCardViewDTO(c)
+        );
 
         return ResponseEntity.ok(dtoPage);
     }
@@ -62,8 +66,10 @@ public class EventoRestController {
     public ResponseEntity<EventoDTO.ClientView> obtenerEvento(
         @PathVariable UUID id
     ) {
-        Evento evento = eventoService.obtenerPorID(id);
-        EventoDTO.ClientView eventoDto = eventoMapper.toEventoClientViewDTO(evento);
+        Evento evento = eventoService.buscarPorID(id);
+        EventoDTO.ClientView eventoDto = eventoMapper.toEventoClientViewDTO(
+            evento
+        );
         return ResponseEntity.ok(eventoDto);
     }
 
@@ -71,8 +77,10 @@ public class EventoRestController {
     public ResponseEntity<EventoDTO.AdminView> obtenerEventoAdmin(
         @PathVariable UUID id
     ) {
-        Evento evento = eventoService.obtenerPorID(id);
-        EventoDTO.AdminView eventoDto = eventoMapper.toEventoAdminViewDTO(evento);
+        Evento evento = eventoService.buscarPorID(id);
+        EventoDTO.AdminView eventoDto = eventoMapper.toEventoAdminViewDTO(
+            evento
+        );
         return ResponseEntity.ok(eventoDto);
     }
 
@@ -82,7 +90,7 @@ public class EventoRestController {
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims
     ) {
         Evento nuevoEvento = eventoMapper.toEntity(eventoDto);
-        Evento eventoDb = eventoService.crearEvento(nuevoEvento);
+        Evento eventoDb = eventoService.guardar(nuevoEvento);
         return ResponseEntity.ok(eventoMapper.toEventoAdminViewDTO(eventoDb));
     }
 
@@ -100,7 +108,9 @@ public class EventoRestController {
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
 
         var inscripciones = inscripcionService.findByUsuario(usuario, pageable);
-        var eventos = inscripciones.map((i) -> eventoMapper.toEventoCardViewDTO(i.getEvento()));
+        var eventos = inscripciones.map(i ->
+            eventoMapper.toEventoCardViewDTO(i.getActividad())
+        );
         return ResponseEntity.ok(eventos);
     }
 
@@ -111,14 +121,22 @@ public class EventoRestController {
     ) {
         UUID usuarioId = UUID.fromString(claims.getSubject());
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
-        Evento evento = eventoService.obtenerPorID(id);
+        Evento evento = eventoService.buscarPorID(id);
 
-        boolean inscritoExitosamente = inscripcionService.inscribirUsuario(usuario, evento);
-        if (inscritoExitosamente) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        inscripcionService.inscribirUsuario(usuario, evento);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> eliminarInscripcionEvento(
+        @RequiereAuth Claims claims,
+        @PathVariable UUID id
+    ) {
+        UUID usuarioId = UUID.fromString(claims.getSubject());
+        Usuario usuario = usuarioService.obtenerPorId(usuarioId);
+        Evento curso = eventoService.buscarPorID(id);
+        inscripcionService.eliminarInscripcion(usuario, curso);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/a/inscripciones")
@@ -130,11 +148,15 @@ public class EventoRestController {
     ) {
         PageRequest pageable = PageRequest.of(page, size);
 
-        Evento evento = eventoService.obtenerPorID(id);
-        var inscripciones = inscripcionService.findByEvento(evento, pageable);
-        var usuarios = inscripciones.map((u) -> usuarioMapper.toPerfilIdDTO(u.getUsuario()));
+        Evento evento = eventoService.buscarPorID(id);
+        var inscripciones = inscripcionService.findByActividad(
+            evento,
+            pageable
+        );
+        var usuarios = inscripciones.map(u ->
+            usuarioMapper.toPerfilIdDTO(u.getUsuario())
+        );
 
         return ResponseEntity.ok(usuarios);
     }
-    
 }

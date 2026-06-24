@@ -1,15 +1,7 @@
 package com.casatallermuso.backend.repositories;
 
-import java.util.UUID;
-
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.casatallermuso.backend.entities.Curso;
 import org.springframework.stereotype.Repository;
 
-import com.casatallermuso.backend.entities.Curso;
-
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, UUID> {
-
-    public long countByActivo(boolean activo);
-
-}
+public interface CursoRepository extends ActividadRepository<Curso> {}
