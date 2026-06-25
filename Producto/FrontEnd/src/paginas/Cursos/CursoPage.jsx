@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { createCursoHorario, createCursoView } from "../../objetos/Curso";
+import { useNavigate, useParams } from "react-router-dom";
+import { createCursoView } from "../../objetos/Curso";
 import { useAuth } from "../../utils/AuthProvider";
-import { ChevronLeft } from "lucide-react";
 import ActividadPage from "../../componentes/Actividad/ActividadPage";
+import ActividadAdminCard from "../../componentes/Actividad/ActividadAdminCard";
 import ActividadErrorPage from "../../componentes/Actividad/ActividadErrorPage";
 import ActividadLoadingPage from "../../componentes/Actividad/ActividadLoadingPage";
 import ActividadNotFoundPage from "../../componentes/Actividad/ActividadNotFoundPage";
@@ -11,37 +11,55 @@ import CursoHorarioCard from "../../componentes/Curso/CursoHorarioCard";
 
 export default function CursoPage() {
   const { id } = useParams();
-  const { isLoggedIn } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [curso, setCurso] = useState(null);
   const [inscrito, setInscrito] = useState(false);
+  const [activo, setActivo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isAdmin = user?.rol?.tipoRol === "Administrador";
 
   useEffect(() => {
-    setCurso(null);
-    setError(null);
-    setLoading(true);
+    let cancelled = false;
 
-    const fetchCurso = async () => {
+    Promise.resolve().then(async () => {
+      if (cancelled) return;
+
+      setCurso(null);
+      setError(null);
+      setLoading(true);
+
       try {
-        const res = await fetch(`/api/cursos/${id}`);
-        if (res.ok) {
+        const res = await fetch(
+          isAdmin ? `/api/cursos/${id}/a` : `/api/cursos/${id}`,
+        );
+        if (res.ok && !cancelled) {
           const data = await res.json();
           const cursoView = createCursoView(data);
           setCurso(cursoView);
+          if (isAdmin) {
+            setActivo(data.activo);
+          }
         }
       } catch (err) {
-        setError(err.message);
+        if (!cancelled) {
+          setError(err.message);
+        }
       }
-      setLoading(false);
-    };
 
-    fetchCurso();
-  }, [id]);
+      if (!cancelled) {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, isAdmin]);
 
   useEffect(() => {
-    const checkInscrito = async() => {
+    const checkInscrito = async () => {
       try {
         const res = await fetch(`/api/cursos/${id}/i`);
         if (res.ok) {
@@ -52,21 +70,22 @@ export default function CursoPage() {
       } catch (err) {
         console.error(`Error al verificar inscripción: ${err}`);
       }
-    }
+    };
 
-    if (isLoggedIn) {
+    if (isLoggedIn()) {
       checkInscrito();
     }
-  }, [id]);
+  }, [id, isLoggedIn]);
 
   const handleInscripcion = async () => {
     if (!isLoggedIn()) {
       navigate("/auth/login");
+      return;
     }
     if (inscrito) return;
     setInscrito(true); // predicción
     try {
-      const res = await fetch (`/api/cursos/${id}/i`, { method: "POST" });
+      const res = await fetch(`/api/cursos/${id}/i`, { method: "POST" });
       if (res.ok) {
         setInscrito(true);
       } else {
@@ -79,30 +98,42 @@ export default function CursoPage() {
   };
 
   if (error) {
-    return <ActividadErrorPage error={error} />
+    return <ActividadErrorPage error={error} />;
   }
 
   if (loading) {
-    return <ActividadLoadingPage />
+    return <ActividadLoadingPage />;
   }
 
   if (!curso) {
-    return <ActividadNotFoundPage />
+    return <ActividadNotFoundPage />;
   }
 
   return (
-    <ActividadPage
-      backLink="/cursos"
-      backLabel="Cursos"
-      actividad={curso}
-      inscrito={inscrito}
-      handleInscripcion={handleInscripcion}
-    >
-      {
-        curso.horarios.map((horario, i) => (
-          <CursoHorarioCard key={i} diaDeSemana={horario.diaDeSemana} horaDesde={horario.horaDesde} horaHasta={horario.horaHasta} />
-        ))
-      }
-    </ActividadPage>
-  )
+    <div className="d-flex flex-column gap-4">
+      <ActividadPage
+        backLink="/cursos"
+        backLabel="Cursos"
+        actividad={curso}
+        inscrito={inscrito}
+        handleInscripcion={handleInscripcion}
+      >
+        {curso.horarios.map((horario, i) => (
+          <CursoHorarioCard
+            key={i}
+            diaDeSemana={horario.diaDeSemana}
+            horaDesde={horario.horaDesde}
+            horaHasta={horario.horaHasta}
+          />
+        ))}
+      </ActividadPage>
+      <ActividadAdminCard
+        apiBasePath="/api/cursos"
+        actividadId={id}
+        tipoLabel="curso"
+        activo={activo}
+        setActivo={setActivo}
+      />
+    </div>
+  );
 }

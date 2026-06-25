@@ -12,9 +12,11 @@ import jakarta.persistence.Table;
 import java.time.LocalTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "horarios_cursos")
 public class HorarioCurso extends Horario {

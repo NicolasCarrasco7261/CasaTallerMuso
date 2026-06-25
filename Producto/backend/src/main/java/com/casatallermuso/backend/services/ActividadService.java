@@ -11,5 +11,6 @@ public interface ActividadService<T extends Actividad> {
     public T guardar(T nuevaEntidad);
     public T buscarPorID(UUID id);
     public Page<T> listar(Pageable pageable);
+    public Page<T> listarActivos(Pageable pageable);
     public void eliminar(UUID id);
 }

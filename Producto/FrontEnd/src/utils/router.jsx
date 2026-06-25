@@ -8,6 +8,7 @@ import CursoPage from "../paginas/Cursos/CursoPage";
 import TuActividad from "../paginas/TuActividad/TuActividad";
 import Eventos from "../paginas/Eventos/Eventos";
 import EventoPage from "../paginas/Eventos/EventoPage";
+import Dashboard from "../paginas/Dashboard/Dashboard";
 
 const router = createHashRouter([
   {
@@ -60,6 +61,7 @@ const router = createHashRouter([
       },
       {
         path: "/me/dashboard",
+        element: <Dashboard />,
       },
     ],
   },

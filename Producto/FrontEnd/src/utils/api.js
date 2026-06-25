@@ -23,10 +23,11 @@ window.fetch = async (requestPath, init) => {
         console.warn("Using absolute URL");
     }
 
+    const isFormData = init?.body instanceof FormData;
     if (!init) init = {};
     init.headers = {
         ...init.headers,
-        'Content-Type': 'application/json',
+        ...(!isFormData && { 'Content-Type': 'application/json' }),
         ...(token && { 'Authorization': `Bearer ${token}` })
     };
     

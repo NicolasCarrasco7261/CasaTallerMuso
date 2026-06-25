@@ -36,6 +36,11 @@ public abstract class ActividadServiceImpl<
     }
 
     @Override
+    public Page<T> listarActivos(Pageable pageable) {
+        return repository.findByActivo(true, pageable);
+    }
+
+    @Override
     public void eliminar(UUID id) {
         T entidad = getEntityOrThrow(id);
         repository.delete(entidad);
