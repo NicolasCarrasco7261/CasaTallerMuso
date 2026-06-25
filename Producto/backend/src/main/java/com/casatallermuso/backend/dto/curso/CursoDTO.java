@@ -46,6 +46,9 @@ public class CursoDTO {
         @NotBlank
         private String descripcion;
 
+        @NotBlank
+        private String contenido;
+
         @NotNull
         private List<HorarioCursoDTO> horarios;
 
@@ -57,6 +60,9 @@ public class CursoDTO {
 
         @NotBlank
         private String descripcion;
+
+        @NotBlank
+        private String contenido;
 
         @NotNull
         private List<HorarioCursoDTO> horarios;
@@ -77,6 +83,9 @@ public class CursoDTO {
 
         @NotBlank
         private String descripcion;
+
+        @NotBlank
+        private String contenido;
 
         @NotBlank
         private String imagenStorageKey;
@@ -100,6 +109,7 @@ public class CursoDTO {
 
         private String nombre;
         private String descripcion;
+        private String contenido;
         private String imagenStorageKey;
         private Integer precio;
         private Integer cupos;

@@ -45,6 +45,9 @@ public class EventoDTO {
         @NotBlank
         private String descripcion;
 
+        @NotBlank
+        private String contenido;
+
         @NotNull
         private List<HorarioEventoDTO> horarios;
 
@@ -56,6 +59,9 @@ public class EventoDTO {
 
         @NotBlank
         private String descripcion;
+
+        @NotBlank
+        private String contenido;
 
         @NotNull
         private List<HorarioEventoDTO> horarios;
@@ -76,6 +82,9 @@ public class EventoDTO {
 
         @NotBlank
         private String descripcion;
+
+        @NotBlank
+        private String contenido;
 
         @NotBlank
         private String imagenStorageKey;
@@ -99,6 +108,7 @@ public class EventoDTO {
 
         private String nombre;
         private String descripcion;
+        private String contenido;
         private String imagenStorageKey;
         private Integer precio;
         private Integer cupos;

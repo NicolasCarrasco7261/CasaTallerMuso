@@ -26,6 +26,9 @@ public abstract class Actividad {
     private String descripcion;
 
     @Column(nullable = false)
+    private String contenido;
+
+    @Column(nullable = false)
     private String imagenStorageKey;
 
     @Column(nullable = false)

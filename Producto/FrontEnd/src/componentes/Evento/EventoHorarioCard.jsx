@@ -1,6 +1,9 @@
 export default function EventoHorarioCard({ fecha, hora }) {
   return (
-    <div className="bg-light border rounded-2 p-3 shadow-sm lift-on-hover">
+    <div
+      className="bg-light border rounded-2 p-3 shadow-sm lift-on-hover text-center"
+      style={{ minWidth: "12em" }}
+    >
       <h3 className="fw-semibold fs-5">{fecha}</h3>
       <p className="text-muted fs-6">{hora}</p>
     </div>
