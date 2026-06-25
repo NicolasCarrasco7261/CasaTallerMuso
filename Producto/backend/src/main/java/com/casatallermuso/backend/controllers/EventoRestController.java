@@ -20,6 +20,7 @@ import com.casatallermuso.backend.annotations.RequiereAuth;
 import com.casatallermuso.backend.annotations.RequiereRol;
 import com.casatallermuso.backend.dto.evento.EventoDTO;
 import com.casatallermuso.backend.dto.evento.EventoMapper;
+import com.casatallermuso.backend.dto.inscripcion.InscripcionDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioDTO;
 import com.casatallermuso.backend.dto.usuario.UsuarioMapper;
 import com.casatallermuso.backend.entities.Evento;
@@ -55,9 +56,13 @@ public class EventoRestController {
         PageRequest pageable = PageRequest.of(page, size, sort);
 
         Page<Evento> eventos = eventoService.listar(pageable);
-        Page<EventoDTO.CardView> dtoPage = eventos.map(c ->
-            eventoMapper.toEventoCardViewDTO(c)
-        );
+        Page<EventoDTO.CardView> dtoPage = eventos.map(c -> {
+            var card = eventoMapper.toEventoCardViewDTO(c);
+            card.setCuposRestantes(
+                inscripcionService.getCuposRestantes(c).intValue()
+            );
+            return card;
+        });
 
         return ResponseEntity.ok(dtoPage);
     }
@@ -67,8 +72,9 @@ public class EventoRestController {
         @PathVariable UUID id
     ) {
         Evento evento = eventoService.buscarPorID(id);
-        EventoDTO.ClientView eventoDto = eventoMapper.toEventoClientViewDTO(
-            evento
+        EventoDTO.ClientView eventoDto = eventoMapper.toEventoClientViewDTO(evento);
+        eventoDto.setCuposRestantes(
+            inscripcionService.getCuposRestantes(evento).intValue()
         );
         return ResponseEntity.ok(eventoDto);
     }
@@ -80,6 +86,9 @@ public class EventoRestController {
         Evento evento = eventoService.buscarPorID(id);
         EventoDTO.AdminView eventoDto = eventoMapper.toEventoAdminViewDTO(
             evento
+        );
+        eventoDto.setCuposRestantes(
+            inscripcionService.getCuposRestantes(evento).intValue()
         );
         return ResponseEntity.ok(eventoDto);
     }
@@ -114,6 +123,21 @@ public class EventoRestController {
         return ResponseEntity.ok(eventos);
     }
 
+    @GetMapping("{id}/i")
+    public ResponseEntity<InscripcionDTO.UsuarioInscrito> verificarInscripcionCurso(
+        @RequiereAuth Claims claims,
+        @PathVariable UUID id
+    ) {
+        UUID usuarioId = UUID.fromString(claims.getSubject());
+        Usuario usuario = usuarioService.obtenerPorId(usuarioId);
+        Evento evento = eventoService.buscarPorID(id);
+
+        var inscrito = inscripcionService.isUsuarioInscrito(usuario, evento);
+        var response = new InscripcionDTO.UsuarioInscrito(inscrito);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("{id}/i")
     public ResponseEntity<Void> inscribirEvento(
         @RequiereAuth Claims claims,
@@ -127,7 +151,7 @@ public class EventoRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}/i")
     public ResponseEntity<Void> eliminarInscripcionEvento(
         @RequiereAuth Claims claims,
         @PathVariable UUID id
@@ -139,7 +163,7 @@ public class EventoRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/a/inscripciones")
+    @GetMapping("/{id}/i/a")
     public ResponseEntity<Page<UsuarioDTO.PerfilId>> listarUsuariosInscritos(
         @RequiereRol(TipoRolUsuario.ADMIN) Claims claims,
         @RequestParam(defaultValue = "0") int page,

@@ -26,6 +26,7 @@ public class EventoDTO {
         @NotNull
         private Integer cupos;
 
+        private Integer cuposRestantes;
     }
 
     @Data

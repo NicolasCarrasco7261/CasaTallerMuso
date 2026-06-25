@@ -1,12 +1,10 @@
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import potteryImg from "../../assets/Pottery.jpg";
 import violinImg from "../../assets/Violin.jpg";
 import workshopImg from "../../assets/Workshop.jpg";
 import "./Home.css";
-import Navbar from "../../componentes/Navbar/Navbar";
-import StatLabelBtn from "../../componentes/StatLabelBtn/StatLabelBtn"
+import StatLabelBtn from "../../componentes/StatLabelBtn/StatLabelBtn";
 
 export default function Home() {
   const [stats, setStats] = useState(null);
@@ -47,28 +45,38 @@ export default function Home() {
           className="text-secondary mb-5 fw-light ms-lg-auto"
           style={{ maxWidth: "450px", fontSize: "1rem" }}
         >
-          Muso es un espacio dedicado a preservar el valor de lo hecho a
-          mano. Talleres, eventos y comunidad en torno a la cultura.
+          Muso es un espacio dedicado a preservar el valor de lo hecho a mano.
+          Talleres, eventos y comunidad en torno a la cultura.
         </p>
-        
+
         <div className="d-flex flex-wrap align-items-center justify-content-lg-end gap-3">
-          {
-            stats && <>
-              {/*
+          {stats && (
+            <>
               <StatLabelBtn
                 number={stats.eventosDisponibles}
-                text={stats.eventosDisponibles == 1 ? 'Evento disponible' : 'Eventos disponibles'}
-                onClick={() => { navigate("/eventos") }}
+                text={
+                  stats.eventosDisponibles == 1
+                    ? "Evento disponible"
+                    : "Eventos disponibles"
+                }
+                onClick={() => {
+                  navigate("/eventos");
+                }}
               />
-              */}
               <StatLabelBtn
                 number={stats.cursosDisponibles}
-                text={stats.cursosDisponibles == 1 ? 'Curso disponible' : 'Cursos disponibles'}
-                onClick={() => { navigate("/cursos") }}
+                text={
+                  stats.cursosDisponibles == 1
+                    ? "Curso disponible"
+                    : "Cursos disponibles"
+                }
+                onClick={() => {
+                  navigate("/cursos");
+                }}
                 forceShow
               />
             </>
-          }
+          )}
         </div>
       </div>
 
@@ -89,4 +97,4 @@ export default function Home() {
       </div>
     </div>
   );
-};
+}

@@ -6,6 +6,8 @@ import Register from "../paginas/Register/Register";
 import Cursos from "../paginas/Cursos/Cursos";
 import CursoPage from "../paginas/Cursos/CursoPage";
 import TuActividad from "../paginas/TuActividad/TuActividad";
+import Eventos from "../paginas/Eventos/Eventos";
+import EventoPage from "../paginas/Eventos/EventoPage";
 
 const router = createHashRouter([
   {
@@ -14,17 +16,25 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "/cursos",
-        element: <Cursos />
+        element: <Cursos />,
       },
       {
         path: "/cursos/:id",
-        element: <CursoPage />
-      }
-    ]
+        element: <CursoPage />,
+      },
+      {
+        path: "/eventos",
+        element: <Eventos />,
+      },
+      {
+        path: "/eventos/:id",
+        element: <EventoPage />,
+      },
+    ],
   },
   {
     path: "/auth",
@@ -32,13 +42,13 @@ const router = createHashRouter([
     children: [
       {
         path: "/auth/login",
-        element: <Login />
+        element: <Login />,
       },
       {
         path: "/auth/signup",
-        element: <Register />
-      }
-    ]
+        element: <Register />,
+      },
+    ],
   },
   {
     path: "/me",
@@ -46,13 +56,13 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        element: <TuActividad />
+        element: <TuActividad />,
       },
       {
-        path: "/me/dashboard"
-      }
-    ]
-  }
+        path: "/me/dashboard",
+      },
+    ],
+  },
 ]);
 
 export default router;
