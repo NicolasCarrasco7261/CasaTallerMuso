@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 
-export default function CursoCard({ curso: { id, nombre, imagenUrl, precio, cupos, cuposRestantes } }) {
+export default function ActividadCard({ href, actividad: { id, nombre, imagenUrl, precio, cupos, cuposRestantes } }) {
   const navigate = useNavigate();
   return (
     <div className="col-12 col-md-6 col-lg-4" key={id}>
@@ -33,7 +33,7 @@ export default function CursoCard({ curso: { id, nombre, imagenUrl, precio, cupo
         <span className="fw-bold text-brand fs-5">
           ${Number(precio).toLocaleString("es-CL")}
         </span>
-        <Link to={`/cursos/${id}`}
+        <Link to={href}
           className={`btn ${cuposRestantes > 0 ? 'btn-brand' : 'btn-secondary'} rounded-2 px-3 py-2 fw-bold small`}
           disabled={cuposRestantes <= 0}
         >

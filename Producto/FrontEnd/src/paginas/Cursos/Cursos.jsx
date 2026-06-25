@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./Cursos.css";
 import Navbar from "../../componentes/Navbar/Navbar";
 import { createCursoCard } from "../../objetos/Curso";
-import CursoCard from "../../componentes/CursoCard/CursoCard";
 import PageNav from "../../componentes/PageNav/PageNav";
+import ActividadCard from "../../componentes/Actividad/ActividadCard";
 
 export default function Cursos() {
   const [cursos, setCursos] = useState([]);
@@ -98,7 +98,7 @@ export default function Cursos() {
 
       <div className="row g-4 mb-5">
         {cursos.length > 0 ? (
-          cursos.map((curso, i) => <CursoCard key={i} curso={curso} />)
+          cursos.map((curso, i) => <ActividadCard key={i} href={`/cursos/${curso.id}`} actividad={curso} />)
           ) : (
             <div className="col-12 text-center py-5">
               <h3 className="text-muted">No hay registros disponibles</h3>
