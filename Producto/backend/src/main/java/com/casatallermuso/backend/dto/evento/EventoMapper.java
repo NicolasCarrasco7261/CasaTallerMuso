@@ -1,5 +1,8 @@
 package com.casatallermuso.backend.dto.evento;
 
+import java.util.ArrayList;
+
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -38,4 +41,11 @@ public interface EventoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creadoEn", ignore = true)
     void updateEventoFromDTO(EventoDTO.Put dto, @MappingTarget Evento evento);
+
+    @AfterMapping
+    default void syncHorarios(@MappingTarget Evento evento) {
+        if (evento.getHorarios() != null) {
+            evento.setHorarios(new ArrayList<>(evento.getHorarios()));
+        }
+    }
 }

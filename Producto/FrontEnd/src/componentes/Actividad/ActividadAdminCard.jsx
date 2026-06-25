@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import PageNav from "../PageNav/PageNav";
 import { User2 } from "lucide-react";
@@ -9,6 +10,7 @@ export default function ActividadAdminCard({
   tipoLabel,
   activo,
   setActivo,
+  editPath,
 }) {
   const { user } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
@@ -109,6 +111,14 @@ export default function ActividadAdminCard({
           >
             {activo ? "Activo" : "Inactivo"}
           </span>
+          {editPath && (
+            <Link
+              to={editPath}
+              className="btn btn-brand-outline rounded-pill px-3"
+            >
+              Editar {tipoLabel}
+            </Link>
+          )}
           <button
             type="button"
             className={`btn ${activo ? "btn-outline-secondary" : "btn-brand"} rounded-pill px-3`}

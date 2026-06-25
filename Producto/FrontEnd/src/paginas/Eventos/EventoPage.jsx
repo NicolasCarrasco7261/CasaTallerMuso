@@ -132,6 +132,7 @@ export default function EventoPage() {
         tipoLabel="evento"
         activo={activo}
         setActivo={setActivo}
+        editPath={`/me/eventos/${id}/editar`}
       />
     </div>
   );

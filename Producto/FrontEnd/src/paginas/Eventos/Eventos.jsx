@@ -3,20 +3,27 @@ import { createEventoCard } from "../../objetos/Evento";
 import PageNav from "../../componentes/PageNav/PageNav";
 import ActividadCard from "../../componentes/Actividad/ActividadCard";
 import "./Eventos.css";
+import { useAuth } from "../../utils/AuthProvider";
 
 export default function Eventos() {
+  const { user } = useAuth();
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagina, setPagina] = useState(0);
   const [numPaginas, setNumPaginas] = useState(0);
+  const [showHidden, setShowHidden] = useState(false);
+  const isAdmin = user?.rol?.tipoRol === "Administrador";
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setEventos(null);
 
-      const res = await fetch(`/api/eventos?page=${pagina}&size=6`);
+      const hiddenParam = showHidden ? "&hidden=true" : "";
+      const res = await fetch(
+        `/api/eventos?page=${pagina}&size=6${hiddenParam}`,
+      );
       if (!res.ok) {
         setError(`«${res.status}»`);
         return;
@@ -29,7 +36,7 @@ export default function Eventos() {
       setLoading(false);
     };
     fetchData();
-  }, [pagina]);
+  }, [pagina, showHidden]);
 
   if (loading)
     return <div className="text-center py-5">Cargando catálogo...</div>;
@@ -51,9 +58,23 @@ export default function Eventos() {
   return (
     <>
       <header className="py-5 text-center bg-white shadow-sm border-bottom mb-5">
-        <span className="text-uppercase tracking-widest text-brand fw-bold">
-          Nuestros Eventos
-        </span>
+        <div className="d-flex flex-column align-items-center gap-3">
+          <span className="text-uppercase tracking-widest text-brand fw-bold">
+            Nuestros Eventos
+          </span>
+          {isAdmin && (
+            <button
+              type="button"
+              className={`btn rounded-pill px-4 ${showHidden ? "btn-brand" : "btn-outline-secondary"}`}
+              onClick={() => {
+                setPagina(0);
+                setShowHidden((prev) => !prev);
+              }}
+            >
+              {showHidden ? "Ocultar inactivos" : "Mostrar ocultos"}
+            </button>
+          )}
+        </div>
       </header>
 
       <div className="row g-4 mb-5">

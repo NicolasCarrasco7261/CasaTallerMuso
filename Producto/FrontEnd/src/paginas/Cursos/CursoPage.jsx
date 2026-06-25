@@ -133,6 +133,7 @@ export default function CursoPage() {
         tipoLabel="curso"
         activo={activo}
         setActivo={setActivo}
+        editPath={`/me/cursos/${id}/editar`}
       />
     </div>
   );

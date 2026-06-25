@@ -5,9 +5,11 @@ import Login from "../paginas/Login/Login";
 import Register from "../paginas/Register/Register";
 import Cursos from "../paginas/Cursos/Cursos";
 import CursoPage from "../paginas/Cursos/CursoPage";
+import CursoEditPage from "../paginas/Cursos/CursoEditPage";
 import TuActividad from "../paginas/TuActividad/TuActividad";
 import Eventos from "../paginas/Eventos/Eventos";
 import EventoPage from "../paginas/Eventos/EventoPage";
+import EventoEditPage from "../paginas/Eventos/EventoEditPage";
 import Dashboard from "../paginas/Dashboard/Dashboard";
 
 const router = createHashRouter([
@@ -62,6 +64,14 @@ const router = createHashRouter([
       {
         path: "/me/dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "/me/cursos/:id/editar",
+        element: <CursoEditPage />,
+      },
+      {
+        path: "/me/eventos/:id/editar",
+        element: <EventoEditPage />,
       },
     ],
   },

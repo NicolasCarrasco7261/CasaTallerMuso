@@ -1,5 +1,8 @@
 package com.casatallermuso.backend.dto.curso;
 
+import java.util.ArrayList;
+
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -38,4 +41,11 @@ public interface CursoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creadoEn", ignore = true)
     void updateCursoFromDTO(CursoDTO.Put dto, @MappingTarget Curso curso);
+
+    @AfterMapping
+    default void syncHorarios(@MappingTarget Curso curso) {
+        if (curso.getHorarios() != null) {
+            curso.setHorarios(new ArrayList<>(curso.getHorarios()));
+        }
+    }
 }

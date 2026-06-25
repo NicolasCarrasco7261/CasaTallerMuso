@@ -6,13 +6,13 @@ import { createCursoCard } from "../../objetos/Curso";
 import { createEventoCard } from "../../objetos/Evento";
 
 const DIAS_SEMANA = [
-  "LUNES",
-  "MARTES",
-  "MIERCOLES",
-  "JUEVES",
-  "VIERNES",
-  "SABADO",
-  "DOMINGO",
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
 ];
 
 function createInitialCursoForm() {
@@ -26,7 +26,7 @@ function createInitialCursoForm() {
     activo: true,
     horarios: [
       {
-        diaDeSemana: "LUNES",
+        diaDeSemana: "Lunes",
         horaDesde: "10:00",
         horaHasta: "12:00",
       },
@@ -58,6 +58,10 @@ function formatClp(value) {
     currency: "CLP",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function contenidoToApi(value) {
+  return (value ?? "").replace(/\r\n/g, "\n").replace(/\n/g, "\\n");
 }
 
 async function uploadImage(file) {
@@ -163,7 +167,7 @@ export default function Dashboard() {
       horarios: [
         ...prev.horarios,
         vistaActiva === "cursos"
-          ? { diaDeSemana: "LUNES", horaDesde: "10:00", horaHasta: "12:00" }
+          ? { diaDeSemana: "Lunes", horaDesde: "10:00", horaHasta: "12:00" }
           : { fecha: "", hora: "19:00" },
       ],
     }));
@@ -207,6 +211,7 @@ export default function Dashboard() {
 
     const payload = {
       ...activeForm,
+      contenido: contenidoToApi(activeForm.contenido),
       precio: Number(activeForm.precio),
       cupos: Number(activeForm.cupos),
       activo: true,
