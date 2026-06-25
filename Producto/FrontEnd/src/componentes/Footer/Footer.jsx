@@ -19,7 +19,7 @@ export default function Footer() {
               <Link to="/cursos" className="text-brand">
                 Cursos
               </Link>
-              <Link to="/cursos" className="text-brand">
+              <Link to="/eventos" className="text-brand">
                 Eventos
               </Link>
             </div>
